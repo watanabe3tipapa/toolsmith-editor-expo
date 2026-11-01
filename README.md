@@ -266,10 +266,6 @@ DEV-MEMO.md                         # 実装メモ・調査記録
 2. [公開サイト](https://watanabe3tipapa.github.io/toolsmith-editor-expo/) — 機能紹介と実装状況の LP
 3. [Web版](https://github.com/watanabe3tipapa/toolsmith-editor) / [Desktop版](https://github.com/watanabe3tipapa/toolsmith-editor-desktop) — 移植元
 
-## 連絡先
-
-- GitHub: https://github.com/watanabe3tipapa/toolsmith-editor-expo
-
 ## ライセンス
 
 MIT ライセンス — 詳細はリポジトリの [LICENSE](LICENSE) ファイルを参照してください。
