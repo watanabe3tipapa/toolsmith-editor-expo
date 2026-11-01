@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+.expo/
+dist/
+build/
+*.log
+.env
+.env.local
+ios/
+android/
+apps/mobile/.expo/
+packages/editor-web/dist/

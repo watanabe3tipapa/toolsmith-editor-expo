@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: rgb(20, 160, 230);
+  --color-primary-foreground: rgb(255, 255, 255);
+  --color-accent: rgb(202, 65, 34);
+  --color-accent-foreground: rgb(255, 255, 255);
+  --color-secondary: color-mix(in oklab, var(--color-primary), var(--color-white) 50% / 60%);
+  --color-secondary-foreground: color-mix(in oklab, var(--color-primary), var(--color-white) 70%);
+  --color-destructive: var(--color-rose-500);
+  --color-destructive-foreground: rgb(255, 255, 255);
+  --color-success: var(--color-teal-500);
+  --color-success-foreground: rgb(255, 255, 255);
+  --color-background: color-mix(in oklab, var(--color-primary), var(--color-black) 80%);
+  --color-foreground: var(--color-white);
+
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+
+  --text-xs: 0.59375rem;
+  --text-sm: 0.71875rem;
+  --text-base: 0.84375rem;
+  --text-lg: 0.96875rem;
+  --text-xl: 1.09375rem;
+  --text-2xl: 1.28125rem;
+  --text-3xl: 1.65625rem;
+  --text-4xl: 2.03125rem;
+}
+
+body {
+  @apply bg-background overflow-x-hidden antialiased text-sm font-orbitron text-foreground tracking-wider;
+  background-image: repeating-linear-gradient(
+      0deg,
+      color-mix(in oklab, var(--color-foreground) 5%, transparent) 0,
+      color-mix(in oklab, var(--color-foreground) 5%, transparent) 1px,
+      transparent 1px,
+      transparent 35rem
+    ),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-foreground) 5%, transparent) 0,
+      color-mix(in oklab, var(--color-foreground) 5%, transparent) 1px,
+      transparent 1px,
+      transparent 35rem
+    );
+}
+
+.typing-container {
+  width: fit-content;
+  border-right: 4px solid color-mix(in oklab, var(--color-foreground) 70%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@keyframes blur-in {
+  0% { filter: blur(var(--blur-xl)); }
+  100% { filter: blur(0px); }
+}
+
+@utility blur-in {
+  animation: blur-in 0.3s ease-in-out;
+}
+
+:where(a, button, input, [contenteditable="true"]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}

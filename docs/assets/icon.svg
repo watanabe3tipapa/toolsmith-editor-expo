@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071526"/>
+      <stop offset="0.55" stop-color="#0a2740"/>
+      <stop offset="1" stop-color="#0e3a58"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fe6ff"/>
+      <stop offset="0.45" stop-color="#14a0e6"/>
+      <stop offset="1" stop-color="#0b6fa8"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="220" fill="url(#bg)"/>
+  <g opacity="0.18" stroke="#14a0e6" stroke-width="3">
+    <path d="M120 256H904M120 384H904M120 512H904M120 640H904M120 768H904"/>
+    <path d="M256 120V904M384 120V904M512 120V904M640 120V904M768 120V904"/>
+  </g>
+  <rect x="150" y="150" width="724" height="724" rx="140" fill="none" stroke="#14a0e6" stroke-opacity="0.55" stroke-width="10"/>
+  <rect x="196" y="196" width="632" height="632" rx="108" fill="#03101d" stroke="#2bc7ff" stroke-opacity="0.35" stroke-width="4"/>
+  <g filter="url(#glow)" fill="url(#metal)">
+    <rect x="292" y="292" width="440" height="88" rx="22"/>
+    <rect x="466" y="292" width="92" height="440" rx="22"/>
+  </g>
+  <rect x="316" y="316" width="392" height="40" rx="12" fill="#d9f7ff" opacity="0.45"/>
+  <g fill="#14a0e6">
+    <circle cx="238" cy="238" r="14"/>
+    <circle cx="786" cy="238" r="14"/>
+    <circle cx="238" cy="786" r="14"/>
+  </g>
+  <circle cx="786" cy="786" r="22" fill="#ca4122"/>
+  <circle cx="786" cy="786" r="9" fill="#ffb199"/>
+</svg>

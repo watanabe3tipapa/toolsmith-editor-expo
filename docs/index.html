@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TOOLSMITH EDITOR EXPO — 書く場所を、ポケットに。</title>
+  <meta name="description" content="TOOLSMITH EDITOR EXPO は、Lexical ベースのリッチテキストエディタを iOS / Android で使えるローカルファーストの Markdown ワークスペースです。原稿は端末内の SQLite へ自動保存されます。" />
+  <link rel="canonical" href="https://watanabe3tipapa.github.io/toolsmith-editor-expo/" />
+  <meta name="theme-color" content="#050d16" />
+  <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+  <link rel="apple-touch-icon" href="./assets/icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="TOOLSMITH EDITOR EXPO" />
+  <meta property="og:title" content="TOOLSMITH EDITOR EXPO — 書く場所を、ポケットに。" />
+  <meta property="og:description" content="リッチテキストと Markdown を往復し、原稿は端末内へ自動保存。iOS / Android 向けローカルファースト・エディタ。" />
+  <meta property="og:url" content="https://watanabe3tipapa.github.io/toolsmith-editor-expo/" />
+  <meta property="og:image" content="https://watanabe3tipapa.github.io/toolsmith-editor-expo/assets/icon.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TOOLSMITH EDITOR EXPO" />
+  <meta name="twitter:description" content="リッチテキストと Markdown を往復し、原稿は端末内へ自動保存。iOS / Android 向けローカルファースト・エディタ。" />
+  <meta name="twitter:image" content="https://watanabe3tipapa.github.io/toolsmith-editor-expo/assets/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050d16;
+      --panel: #081522;
+      --panel-2: #0b1e30;
+      --line: rgba(43, 199, 255, 0.2);
+      --line-strong: rgba(43, 199, 255, 0.48);
+      --primary: #2bc7ff;
+      --primary-deep: #14a0e6;
+      --text: #e7f5ff;
+      --muted: #93aabf;
+      --faint: #5f7890;
+      --green: #67e8a5;
+      --amber: #fcd34d;
+      --red: #fca5a5;
+      --radius: 16px;
+      --max: 1140px;
+      --font: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      --display: 'Orbitron', var(--font);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(rgba(43, 199, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(43, 199, 255, 0.045) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, #000 0%, #000 64%, transparent 100%);
+      pointer-events: none;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      top: -24rem;
+      left: 50%;
+      width: 50rem;
+      height: 50rem;
+      transform: translateX(-50%);
+      z-index: -1;
+      border-radius: 50%;
+      background: rgba(20, 160, 230, 0.14);
+      filter: blur(140px);
+      pointer-events: none;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    h1, h2, h3, p { margin-top: 0; }
+    code {
+      padding: 0.08em 0.36em;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: rgba(43, 199, 255, 0.08);
+      color: var(--primary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+    }
+    .wrap { width: min(100% - 2.5rem, var(--max)); margin-inline: auto; }
+    .display { font-family: var(--display); letter-spacing: 0.14em; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1.2rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid rgba(43, 199, 255, 0.3);
+      border-radius: 7px;
+      background: rgba(43, 199, 255, 0.08);
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .eyebrow .dot {
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 9px var(--primary);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.35rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: background-color 0.15s ease, border-color 0.15s ease, filter 0.15s ease, transform 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--primary);
+      color: #031019;
+      box-shadow: 0 0 28px rgba(43, 199, 255, 0.22);
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-ghost {
+      border-color: var(--line-strong);
+      background: rgba(4, 14, 24, 0.6);
+      color: var(--text);
+    }
+    .btn-ghost:hover { background: rgba(43, 199, 255, 0.1); }
+    .btn svg { flex: none; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(43, 199, 255, 0.14);
+      background: rgba(5, 13, 22, 0.84);
+      backdrop-filter: blur(14px);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 4.2rem;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 0.7rem; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 2.1rem;
+      height: 2.1rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: rgba(43, 199, 255, 0.1);
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .brand-name {
+      font-family: var(--display);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+    }
+    .brand-name small {
+      display: block;
+      color: var(--faint);
+      font-family: var(--font);
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      margin-top: 0.15rem;
+    }
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; font-size: 0.86rem; color: var(--muted); }
+    .nav-links a:hover { color: var(--primary); }
+    .nav .btn { padding: 0.6rem 1rem; font-size: 0.84rem; }
+    .hero { padding: 5.2rem 0 5.4rem; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3.4rem;
+      align-items: center;
+    }
+    .hero h1 {
+      margin-bottom: 1.4rem;
+      font-size: clamp(2.5rem, 5.1vw, 4rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.045em;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero-copy {
+      max-width: 34rem;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.9;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.9rem; }
+    .hero-checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.3rem;
+      margin: 1.7rem 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+    .hero-checks li { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .hero-checks svg { color: var(--green); }
+    .hero-note { margin-top: 0.9rem; color: var(--faint); font-size: 0.76rem; }
+    .hero-note a { color: var(--primary); border-bottom: 1px solid var(--line-strong); }
+    .hero-note a:hover { border-bottom-color: var(--primary); }
+
+    .device-stage { position: relative; display: grid; place-items: center; min-height: 34rem; }
+    .device-stage::before {
+      content: "";
+      position: absolute;
+      width: 21rem;
+      height: 21rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(43, 199, 255, 0.2), transparent 68%);
+      filter: blur(6px);
+    }
+    .phone {
+      position: relative;
+      z-index: 1;
+      width: 17.2rem;
+      padding: 0.55rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 2.4rem;
+      background: linear-gradient(160deg, #102638, #050c15 62%);
+      box-shadow: 0 34px 80px rgba(0, 0, 0, 0.58), 0 0 60px rgba(43, 199, 255, 0.1);
+    }
+    .phone::after {
+      content: "";
+      position: absolute;
+      top: 0.9rem;
+      left: 50%;
+      width: 4.6rem;
+      height: 1rem;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #03090f;
+      z-index: 3;
+    }
+    .phone-screen {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 33rem;
+      overflow: hidden;
+      border-radius: 1.95rem;
+      background: #071526;
+      z-index: 2;
+    }
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.55rem 1.1rem 0.15rem;
+      color: var(--faint);
+      font-size: 0.52rem;
+      letter-spacing: 0.08em;
+    }
+    .app-header {
+      display: grid;
+      grid-template-columns: 2rem 1fr 2rem;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 0.75rem 0.6rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .app-header .back { color: var(--primary); font-size: 1.35rem; line-height: 1; }
+    .app-header .menu { color: var(--primary); font-size: 1.05rem; text-align: right; letter-spacing: 0.05em; }
+    .app-title-wrap { text-align: center; min-width: 0; }
+    .app-title-wrap b {
+      display: block;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 0.64rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .app-title-wrap span { color: var(--green); font-size: 0.47rem; letter-spacing: 0.05em; }
+    .app-toolbar {
+      display: flex;
+      gap: 0.18rem;
+      padding: 0.45rem 0.55rem;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--muted);
+      font-size: 0.5rem;
+    }
+    .app-toolbar b,
+    .app-toolbar i {
+      display: grid;
+      flex: none;
+      place-items: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-style: normal;
+      font-weight: 500;
+    }
+    .app-toolbar b { border-color: var(--line-strong); background: rgba(43, 199, 255, 0.12); color: var(--primary); }
+    .app-doc { flex: 1; min-height: 0; padding: 1rem 1rem 0.5rem; overflow: hidden; }
+    .app-doc .kicker { color: var(--primary); font-family: var(--display); font-size: 0.46rem; letter-spacing: 0.18em; }
+    .app-doc h3 { margin: 0.5rem 0 0.55rem; font-size: 1.18rem; line-height: 1.35; letter-spacing: -0.02em; }
+    .app-doc p { margin-bottom: 0.65rem; color: var(--muted); font-size: 0.58rem; line-height: 1.75; }
+    .app-doc .rule { width: 2.6rem; height: 1px; margin: 0.7rem 0; background: var(--line-strong); }
+    .app-doc .meta { display: flex; flex-wrap: wrap; gap: 0.55rem; color: var(--faint); font-size: 0.48rem; }
+    .app-doc .meta .ok { color: var(--green); }
+    .app-preview {
+      margin: 0.55rem 1rem 0;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(2, 8, 14, 0.72);
+      color: #8fb7d4;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.47rem;
+      line-height: 1.75;
+      white-space: pre;
+      overflow: hidden;
+    }
+    .app-preview .tag { color: var(--primary); }
+    .app-preview .abc { color: var(--amber); }
+    .app-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0.85rem 0.6rem;
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 0.45rem;
+    }
+    .app-footer b { color: var(--primary); font-weight: 500; }
+    .float-chip {
+      position: absolute;
+      z-index: 2;
+      padding: 0.42rem 0.7rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: rgba(8, 21, 34, 0.92);
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.56rem;
+      letter-spacing: 0.12em;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .float-chip.one { top: 3.2rem; left: 0.2rem; }
+    .float-chip.two { right: 0.2rem; top: 12rem; color: var(--green); border-color: rgba(103, 232, 165, 0.4); }
+    .float-chip.three { bottom: 4.4rem; left: 1.4rem; color: var(--amber); border-color: rgba(252, 211, 77, 0.36); }
+
+    section { position: relative; }
+    .section-pad { padding: 5rem 0; }
+    .band { border-block: 1px solid rgba(43, 199, 255, 0.14); background: rgba(3, 9, 16, 0.45); }
+    .section-head { max-width: 46rem; margin-bottom: 2.4rem; }
+    .kicker {
+      margin-bottom: 0.7rem;
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .section-head h2 {
+      margin-bottom: 0.8rem;
+      font-size: clamp(1.75rem, 3.4vw, 2.55rem);
+      line-height: 1.25;
+      letter-spacing: -0.035em;
+    }
+    .section-head p { margin-bottom: 0; color: var(--muted); font-size: 0.95rem; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .card {
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(12, 30, 47, 0.75), rgba(5, 12, 20, 0.75));
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+    .icon-box {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(43, 199, 255, 0.08);
+      color: var(--primary);
+    }
+    .card h3 { margin-bottom: 0.5rem; font-size: 1.02rem; }
+    .card p { margin-bottom: 0; color: var(--muted); font-size: 0.83rem; line-height: 1.8; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; counter-reset: step; }
+    .step {
+      position: relative;
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(6, 15, 25, 0.6);
+    }
+    .step-no {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+    }
+    .step h3 { margin-bottom: 0.45rem; font-size: 1rem; }
+    .step p { margin-bottom: 0; color: var(--muted); font-size: 0.83rem; line-height: 1.8; }
+    .data-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items: start; }
+    .data-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .data-list li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); font-size: 0.86rem; }
+    .data-list dt { color: var(--faint); }
+    .data-list dd { margin: 0; color: var(--text); }
+    .data-list dd.safe { color: var(--green); }
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .status-panel {
+      padding: 1.6rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(6, 15, 25, 0.6);
+    }
+    .status-panel h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+    .status-panel h3 .badge {
+      padding: 0.12rem 0.45rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.52rem;
+      letter-spacing: 0.12em;
+    }
+    .check-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.55rem; }
+    .check-list li {
+      display: grid;
+      grid-template-columns: 1rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.7;
+    }
+    .check-list svg { margin-top: 0.22rem; }
+    .check-list .done svg { color: var(--green); }
+    .check-list .todo svg { color: var(--faint); }
+    .check-list .todo { color: var(--faint); }
+    .cta {
+      padding: 3.2rem 2rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(43, 199, 255, 0.16), transparent 60%),
+        rgba(8, 21, 34, 0.8);
+      text-align: center;
+    }
+    .cta h2 { margin-bottom: 0.7rem; font-size: clamp(1.7rem, 3.2vw, 2.4rem); letter-spacing: -0.035em; }
+    .cta p { max-width: 38rem; margin-inline: auto; color: var(--muted); }
+    .cta .hero-actions { justify-content: center; margin-top: 1.6rem; }
+    .specs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 1.4rem;
+      margin: 1.2rem 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--faint);
+      font-size: 0.76rem;
+    }
+    .site-footer {
+      margin-top: 4rem;
+      padding: 1.8rem 0 2.5rem;
+      border-top: 1px solid rgba(43, 199, 255, 0.14);
+      color: var(--faint);
+      font-size: 0.78rem;
+    }
+    .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 1.3rem; }
+    .footer-links a:hover { color: var(--primary); }
+    :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 3px; }
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 2.6rem; }
+      .hero { padding: 3.8rem 0 4.2rem; }
+      .device-stage { min-height: auto; padding: 1rem 0 0; }
+      .float-chip.one { left: 4%; }
+      .float-chip.two { right: 4%; }
+      .float-chip.three { left: 12%; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .data-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 1.8rem, var(--max)); }
+      .hero { padding: 2.8rem 0 3.2rem; }
+      .hero h1 { font-size: clamp(2.1rem, 10vw, 3rem); }
+      .hero-copy { font-size: 0.94rem; }
+      .section-pad { padding: 3.4rem 0; }
+      .cards, .steps, .status-grid { grid-template-columns: 1fr; }
+      .phone { width: 16.2rem; }
+      .phone-screen { height: 31rem; }
+      .float-chip { display: none; }
+      .data-list li { grid-template-columns: 6.3rem 1fr; }
+      .cta { padding: 2.4rem 1.2rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="./" aria-label="TOOLSMITH EDITOR EXPO ホーム">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span class="brand-name">TOOLSMITH<small>EDITOR EXPO</small></span>
+      </a>
+      <nav class="nav-links" aria-label="メインナビゲーション">
+        <a href="#features">特徴</a>
+        <a href="#workflow">使い方</a>
+        <a href="#data">データ</a>
+        <a href="#status">実装状況</a>
+        <a href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </nav>
+      <a class="btn btn-primary" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">
+        ソースコード
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Local-first mobile markdown</p>
+          <h1>書く場所を、<br /><span>ポケットに。</span></h1>
+          <p class="hero-copy">
+            TOOLSMITH EDITOR EXPO は、Web版の編集体験を iOS / Android へ運ぶローカルファーストの Markdown ワークスペースです。
+            リッチテキストで書き、Markdown で持ち出し、原稿は端末内へ自動保存します。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">
+              GitHub でソースを見る
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="#features">特徴を見る</a>
+          </div>
+          <ul class="hero-checks">
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>アカウント不要</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>端末内 SQLite</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>オフライン動作</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>MIT License</li>
+          </ul>
+          <p class="hero-note">
+            Phase 0 実装済み。<a href="#status">iOS / Android 実機での検証を進行中</a>です。ストア配信は未定。
+          </p>
+        </div>
+
+        <div class="device-stage">
+          <div class="float-chip one" aria-hidden="true">SQLITE LOCAL</div>
+          <div class="float-chip two" aria-hidden="true">ABC PLAYBACK</div>
+          <div class="float-chip three" aria-hidden="true">5 EXPORT FORMATS</div>
+          <div class="phone" role="img" aria-label="TOOLSMITH EDITOR EXPO のエディタ画面イメージ">
+            <div class="phone-screen">
+              <div class="phone-status"><span>9:41</span><span>▮▮▮</span></div>
+              <div class="app-header">
+                <span class="back" aria-hidden="true">‹</span>
+                <span class="app-title-wrap">
+                  <b>思考を、すぐ形にする。</b>
+                  <span>保存済み</span>
+                </span>
+                <span class="menu" aria-hidden="true">⋯</span>
+              </div>
+              <div class="app-toolbar" aria-hidden="true">
+                <b>H1</b><i>B</i><i>I</i><i>U</i><i>“</i><i>≡</i><i>☑</i><i>⌘</i><i>↗</i>
+              </div>
+              <div class="app-doc">
+                <span class="kicker">MARKDOWN WORKSPACE</span>
+                <h3>思考を、すぐ<br />形にする。</h3>
+                <p>余計な選択肢を減らし、文章とアイデアをつなげるための軽量な編集環境。</p>
+                <div class="rule"></div>
+                <div class="meta"><span>842文字</span><span>132語</span><span class="ok">保存済み · たった今</span></div>
+              </div>
+              <pre class="app-preview" aria-hidden="true"><span class="tag">#</span> 思考を、すぐ形にする。
+
+リッチテキストで書き、Markdownで持ち出す。
+<span class="abc">```music-abc</span>
+X:1
+T:Focus
+K:C
+C D E G | A G E D | C4
+<span class="abc">```</span></pre>
+              <div class="app-footer">
+                <span>SQLite · 自動保存</span>
+                <b>プレビュー OFF</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section-pad band">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">必要な道具を、ポケットに</p>
+          <h2>書く、整える、持ち出す。<br />その流れを、端末内で。</h2>
+          <p>機能を増やすのではなく、書き始めてから書き出しまでの距離を短くしました。</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>
+            <h3>端末内 SQLite へ自動保存</h3>
+            <p>編集が止まると SQLite へ保存。待ち時間は 400 / 800 / 1500 / 2500ms から選べ、保存状態はヘッダーに表示されます。</p>
+          </article>
+          <article class="card">
+            <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/></svg></span>
+            <h3>リッチテキストと Markdown を往復</h3>
+            <p>見出し、リスト、チェックリスト、引用、表、リンク、コードブロックをリッチテキストで編集。Markdown ソースもその場で確認できます。</p>
+          </article>
+          <article class="card">
+            <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+            <h3>ABC 記法の楽譜を再生</h3>
+            <p><code>```abc</code> / <code>```music-abc</code> ブロックを abcjs で描画。再生、一時停止、停止、テンポ調整までアプリ内で完結します。</p>
+          </article>
+          <article class="card">
+            <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span>
+            <h3>5形式の書き出し</h3>
+            <p>Markdown / HTML / JSON / Quarto / Plain Text を OS の共有シートへ。AirDrop、メール、ファイルアプリから取り出せます。</p>
+          </article>
+          <article class="card">
+            <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg></span>
+            <h3>既存の Markdown を受け取る</h3>
+            <p>DocumentPicker から <code>.md</code> / <code>.markdown</code> / <code>.txt</code> を読み込み、新しい文書として保存します。</p>
+          </article>
+          <article class="card">
+            <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <h3>オフラインで完結</h3>
+            <p>エディタ、フォント、abcjs をアプリに同梱。原稿を外部サーバーへ送らず、ネットワークなしでも動作します。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="section-pad">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">はじめる</p>
+          <h2>3ステップで、書き始められる。</h2>
+          <p>セットアップはありません。起動したら、そのまま書けます。</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="step-no">STEP 01</span>
+            <h3>新しい文書をつくる</h3>
+            <p>ライブラリから「＋ 新しい文書」を選ぶか、既存の Markdown を読み込みます。初回は案内文つきの文書が用意されます。</p>
+          </article>
+          <article class="step">
+            <span class="step-no">STEP 02</span>
+            <h3>書いて、整える</h3>
+            <p>横スクロールのツールバーで書式を変更。必要ならメニューからソースプレビューをオンにして、Markdown と ABC 楽譜を確認します。</p>
+          </article>
+          <article class="step">
+            <span class="step-no">STEP 03</span>
+            <h3>保存して、持ち出す</h3>
+            <p>編集内容は自動保存。共有シートから必要な形式を選び、AirDrop やファイルアプリへ書き出せます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="data" class="section-pad band">
+      <div class="wrap data-grid">
+        <div>
+          <p class="kicker">データの取り扱い</p>
+          <h2>原稿は、<br />この端末の中に。</h2>
+          <p style="color: var(--muted); font-size: 0.95rem;">
+            TOOLSMITH EDITOR EXPO は、クラウドサービスではありません。
+            文書はアプリ内の SQLite に保存され、アプリが内容を外部へ送信することはありません。
+          </p>
+        </div>
+        <ul class="data-list">
+          <li><span>保存先</span><span>端末内 SQLite（アプリ専用）</span></li>
+          <li><span>アカウント</span><span>不要</span></li>
+          <li><span>テレメトリ</span><span class="safe">なし</span></li>
+          <li><span>文書の送信</span><span class="safe">なし</span></li>
+          <li><span>対応形式</span><span>Markdown / HTML / JSON / Quarto / Plain Text</span></li>
+          <li><span>取り込み</span><span>DocumentPicker で選んだファイルのみ</span></li>
+          <li><span>ライセンス</span><span>MIT License</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="status" class="section-pad">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">開発状況</p>
+          <h2>Phase 0 は実装済み。<br />いまは実機で確かめている段階。</h2>
+          <p>開発中のプロジェクトです。ストア配信、署名、EAS Build の設定はまだ整っていません。</p>
+        </div>
+        <div class="status-grid">
+          <article class="status-panel">
+            <h3>実装済み <span class="badge">PHASE 0</span></h3>
+            <ul class="check-list">
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>Expo SDK 58 + Expo Router のモノレポ構成</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>Lexical エディタの抽出と単一HTMLビルド</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>WebView ブリッジと自動保存の直列化</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>SQLite の文書 CRUD と設定保存</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>ライブラリ / エディタ / 設定のネイティブ画面</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>5形式の書き出しと DocumentPicker 取り込み</li>
+            </ul>
+          </article>
+          <article class="status-panel">
+            <h3>これから <span class="badge">NEXT</span></h3>
+            <ul class="check-list">
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>iOS / Android 実機での WebView 読み込み検証</li>
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>abcjs の音声再生検証（マナーモード / Bluetooth）</li>
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>10万字文書の入力・保存ベンチマーク</li>
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>EAS Build / CI の整備</li>
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>App Store / Google Play 向けスクリーンショット</li>
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>文書検索・タグ・一括バックアップ</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad band">
+      <div class="wrap">
+        <div class="cta">
+          <p class="kicker">TOOLSMITH EDITOR EXPO</p>
+          <h2>次の一文を、ポケットから。</h2>
+          <p>ソースコードと開発メモを GitHub で公開しています。実装の詳細や検証項目は DEV-MEMO.md を参照してください。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">
+              GitHub リポジトリ
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo/blob/main/DEV-MEMO.md" target="_blank" rel="noopener noreferrer">開発メモを読む</a>
+          </div>
+          <ul class="specs">
+            <li>iOS / Android</li>
+            <li>Expo SDK 58</li>
+            <li>React Native 0.88</li>
+            <li>Lexical / abcjs</li>
+            <li>MIT License</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>TOOLSMITH EDITOR EXPO · v0.1.0</span>
+      <div class="footer-links">
+        <a href="#data">データの取り扱い</a>
+        <a href="https://github.com/watanabe3tipapa/toolsmith-editor-expo/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">License</a>
+        <a href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,50 @@
+export const APP_NAME = 'TOOLSMITH EDITOR';
+
+export const DEFAULT_TITLE = '無題の文書';
+
+export const DEFAULT_MARKDOWN = [
+  '# TOOLSMITH EDITOR',
+  '',
+  '**アイデアを、すぐに書き留めるための軽量なワークスペースです。**',
+  '',
+  '- リッチテキストで自然に書く',
+  '- Markdownソースをリアルタイムで確認する',
+  '- 変更内容はこの端末内に自動保存される',
+  '',
+  '## まずはここから',
+  '',
+  'この案内を書き換えるか、新しい文書を作成して始めましょう。',
+  '',
+  '## ABC記法を試す',
+  '',
+  'お気に入りの楽曲をABC記法で紹介します。',
+  '',
+  '```music-abc',
+  'X: 1',
+  "T: Cooley's Reel",
+  'M: 4/4',
+  'L: 1/8',
+  'K: Emin',
+  '|:D2|"Em"EBBA B2 EB|\\',
+  '    ~B2 AB dBAG|\\',
+  '    "D"FDAD BDAD|\\',
+  '    FDAD dAFD|',
+  '"Em"EBBA B2 EB|\\',
+  '    B2 AB defg|\\',
+  '    "D"afe^c dBAF|\\',
+  '    "Em"DEFD E2:|',
+  '|:gf|"Em"eB B2 efge|\\',
+  '    eB B2 gedB|\\',
+  '    "D"A2 FA DAFA|\\',
+  '    A2 FA defg|',
+  '"Em"eB B2 eBgB|\\',
+  '    eB B2 defg|\\',
+  '    "D"afe^c dBAF|\\',
+  '    "Em"DEFD E2:|',
+  '```',
+  '',
+  '「abc」または「music-abc」のコードブロックは、下部のプレビューで楽譜として描画され、再生できます。',
+].join('\n');
+
+export const AUTOSAVE_DELAY_MS = 800;
+export const BRIDGE_DEBOUNCE_MS = 300;

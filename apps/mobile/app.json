@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "TOOLSMITH EDITOR",
+    "slug": "toolsmith-editor",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "toolsmith",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#071526"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.toolsmith.editor"
+    },
+    "android": {
+      "package": "app.toolsmith.editor",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#071526"
+      },
+      "softwareKeyboardLayoutMode": "resize",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": ["expo-router", "expo-sqlite", "expo-splash-screen"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "toolsmith-editor-expo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TOOLSMITH EDITOR Expo edition - local-first Markdown workspace for iOS and Android",
+  "license": "MIT",
+  "workspaces": [
+    "apps/mobile",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:editor": "npm run build -w @toolsmith/editor-web",
+    "dev": "npm run start -w @toolsmith/mobile",
+    "ios": "npm run ios -w @toolsmith/mobile",
+    "android": "npm run android -w @toolsmith/mobile",
+    "typecheck": "npm run typecheck -w @toolsmith/shared && npm run typecheck -w @toolsmith/editor-web && npm run typecheck -w @toolsmith/mobile",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
