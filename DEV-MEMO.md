@@ -442,6 +442,8 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 
 - Expo SDK 58のテンプレートは React 19.3.0 / React Native 0.88.1（`expo-template-blank-typescript@58.0.31` で確認）
 - 現在のNodeは v25.9.0。ExpoはLTS（22/24系）推奨のため、nvm等で切り替えるのが無難
+- TypeScriptは6.0.3。6.0で`baseUrl`が非推奨（TS7.0で廃止、指定するとTS5101）になったため、`paths`は`baseUrl`なしの相対指定（`./src/*`）に統一する
+- CIはNode 22で`npm ci` → `typecheck` → `build:editor` → 生成物の差分チェックを実行する
 - `npx create-expo-app@latest` で雛形生成後、`npx expo install` でバージョンをSDKに整合させる
 
 ---
@@ -669,3 +671,4 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 | 2026-11-01 | Phase 0〜1 相当を実装。単一HTMLを `editorHtml.ts` と `docs/demo/editor.html` の両方へ出力するよう変更 |
 | 2026-11-01 | `music-abc` フェンスが `music` + `-abc` に分解される問題を、ハイフン許容のカスタムCODEトランスフォーマーで修正 |
 | 2026-11-01 | コードブロックの折り返し表示を修正。GitHub Pages LP・CI・Archify アーキテクチャ図を追加 |
+| 2026-11-01 | TypeScript 6.0.3へ更新。`baseUrl`非推奨（TS5101）に伴い`paths`を相対指定へ変更し、全ワークスペースの型検査・エディタビルド・生成物の差分なしを確認 |

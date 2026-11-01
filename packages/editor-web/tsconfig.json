@@ -10,7 +10,6 @@
     "noEmit": true,
     "allowImportingTsExtensions": false,
     "types": ["vite/client", "node"],
-    "baseUrl": ".",
     "paths": {
       "@toolsmith/shared": ["../../packages/shared/src"]
     }

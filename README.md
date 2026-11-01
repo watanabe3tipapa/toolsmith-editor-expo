@@ -68,6 +68,7 @@ Web版は手軽ですが、原稿の保存先はブラウザの IndexedDB に閉
 - **データ層**: `expo-sqlite`（`documents` / `app_settings` / `auto_save_log`）
 - **ファイル連携**: `expo-file-system` + `expo-sharing` + `expo-document-picker`
 - **ブリッジ**: `window.ReactNativeWebView.postMessage` と `injectJavaScript` による JSON メッセージ
+- **ツールチェーン**: npm workspaces + TypeScript 6.0（`paths` は `baseUrl` を使わない相対指定）
 - **ビルド**: エディタを単一HTMLへビルドし、`editorHtml.ts` としてアプリへ同梱。同じHTMLを LP のライブデモ用に `docs/demo/editor.html` へも出力
 
 ### データとセキュリティ
