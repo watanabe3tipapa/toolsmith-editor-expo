@@ -427,7 +427,7 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 | expo-asset | 58.0.19 | 同梱HTML |
 | expo-audio | 58.0.11 | ABC音声フォールバック |
 | expo-status-bar / expo-splash-screen | 58.x | 起動 |
-| react-native-safe-area-context | 5.11.0 | セーフエリア |
+| react-native-safe-area-context | 5.10.1 | セーフエリア（Expo Go SDK 58 同梱版に合わせる） |
 | react-native-screens | 4.30.1 | Router |
 | zustand | 5.0.16 | 状態管理 |
 
@@ -444,6 +444,9 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 - 現在のNodeは v25.9.0。ExpoはLTS（22/24系）推奨のため、nvm等で切り替えるのが無難
 - TypeScriptは6.0.3。6.0で`baseUrl`が非推奨（TS7.0で廃止、指定するとTS5101）になったため、`paths`は`baseUrl`なしの相対指定（`./src/*`）に統一する
 - CIはNode 22で`npm ci` → `typecheck` → `lint` → `test` → `build:editor` → 生成物の差分チェックを実行する
+- Expo Go（SDK 58）で動かすため、`react-native-safe-area-context`はExpo Go同梱の5.10.1に固定する。npm workspacesのpeer自動解決でrootに別バージョンが入るのを防ぐため、ルート`devDependencies`にも`react` 19.3.0と`react-native-safe-area-context` 5.10.1を明示している
+- `newArchEnabled` / `splash` / `android.edgeToEdgeEnabled`はSDK 58のapp.jsonスキーマでは廃止。新アーキテクチャとedge-to-edgeは既定で有効、スプラッシュは`expo-splash-screen`プラグインで設定する
+- `expo-env.d.ts`はExpo CLIが生成するファイルのためgit管理しない（`apps/mobile/.gitignore`）
 - `npx create-expo-app@latest` で雛形生成後、`npx expo install` でバージョンをSDKに整合させる
 
 ---
@@ -673,3 +676,4 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 | 2026-11-01 | コードブロックの折り返し表示を修正。GitHub Pages LP・CI・Archify アーキテクチャ図を追加 |
 | 2026-11-01 | TypeScript 6.0.3へ更新。`baseUrl`非推奨（TS5101）に伴い`paths`を相対指定へ変更し、全ワークスペースの型検査・エディタビルド・生成物の差分なしを確認 |
 | 2026-11-01 | ESLint（eslint-config-expo）とVitestを導入。`packages/shared`の純粋関数に33件のユニットテストを追加し、CIにlint/testを組み込んだ |
+| 2026-11-01 | Expo Go（SDK 58）での実機確認に向け、`react-native-safe-area-context`を5.10.1へ整合。app.jsonの廃止フィールドを整理し、expo-doctor 20/20を確認 |

@@ -7,12 +7,6 @@
     "icon": "./assets/icon.png",
     "scheme": "toolsmith",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#071526"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.toolsmith.editor"
@@ -23,10 +17,20 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#071526"
       },
-      "softwareKeyboardLayoutMode": "resize",
-      "edgeToEdgeEnabled": true
+      "softwareKeyboardLayoutMode": "resize"
     },
-    "plugins": ["expo-router", "expo-sqlite", "expo-splash-screen"],
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#071526"
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     }
