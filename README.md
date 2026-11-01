@@ -18,7 +18,7 @@ toolsmith-editor-expo は、Web版 TOOLSMITH EDITOR の編集体験を Expo（Re
 
 ## 開発状況
 
-Phase 0（技術検証）の実装まで完了しています。iOS / Android 実機での WebView 読み込み、ABC 音声、10万字文書の性能検証はこれからです。
+モバイル版の土台（Phase 0〜1 相当）は実装済みです。iOS / Android 実機での WebView 読み込み、ABC 音声、10万字文書の性能検証はこれからです。
 
 > 本リポジトリは開発中です。ストア配信、署名、EAS Build の設定は未完了です。
 
@@ -31,7 +31,7 @@ Web版は手軽ですが、原稿の保存先はブラウザの IndexedDB に閉
 | 体験 | toolsmith-editor-expo の対応物 |
 |---|---|
 | 書く | WebView 内の Lexical によるリッチテキスト編集（見出し・リスト・引用・表・リンク・コード） |
-| 確かめる | Markdown ソースのプレビュー（GFM テーブル対応、モバイルでは初期非表示） |
+| 確かめる | Markdown ソースのプレビュー（GFM テーブルの変換に対応、モバイルでは初期非表示） |
 | 残す | 端末内 SQLite へ自動保存。保存中・保存済み・未保存・保存エラーをヘッダーに表示 |
 | 鳴らす | `abc` / `music-abc` のコードフェンスを abcjs で楽譜描画・再生 |
 | 持ち出す | Markdown / HTML / JSON / Quarto / Plain Text を共有シートへ |
@@ -53,7 +53,7 @@ Web版は手軽ですが、原稿の保存先はブラウザの IndexedDB に閉
 - **Markdown 同期** — 編集内容を Markdown へ変換し、ソースプレビューへ反映。Markdown ショートカット入力にも対応
 - **自動保存** — 編集停止後に SQLite へ保存。待ち時間は設定画面から 400 / 800 / 1500 / 2500ms に変更可能
 - **保存状態の可視化** — 保存中・保存済み・未保存・保存エラーをヘッダーに常時表示
-- **ABC 記法** — 楽譜ブロックを abcjs で描画し、再生・一時停止・停止・テンポ（QPM）調整が可能
+- **ABC 記譜** — 楽譜ブロックを abcjs で描画し、再生・一時停止・停止・テンポ（QPM）調整が可能
 - **書き出し** — 共有シートから Markdown / HTML / JSON / Quarto / Plain Text を保存・共有
 - **インポート** — DocumentPicker で `.md` / `.markdown` / `.txt` を読み込み、新しい文書として保存
 - **設定** — ソースプレビューの初期表示、自動保存の待ち時間を端末内に保存
@@ -68,7 +68,7 @@ Web版は手軽ですが、原稿の保存先はブラウザの IndexedDB に閉
 - **データ層**: `expo-sqlite`（`documents` / `app_settings` / `auto_save_log`）
 - **ファイル連携**: `expo-file-system` + `expo-sharing` + `expo-document-picker`
 - **ブリッジ**: `window.ReactNativeWebView.postMessage` と `injectJavaScript` による JSON メッセージ
-- **ビルド**: エディタを単一HTMLへビルドし、`editorHtml.ts` としてアプリへ同梱
+- **ビルド**: エディタを単一HTMLへビルドし、`editorHtml.ts` としてアプリへ同梱。同じHTMLを LP のライブデモ用に `docs/demo/editor.html` へも出力
 
 ### データとセキュリティ
 
@@ -76,7 +76,7 @@ Web版は手軽ですが、原稿の保存先はブラウザの IndexedDB に閉
 - アカウント登録、テレメトリ、クラウド同期はありません
 - 書き出しは OS の共有シート、読み込みは DocumentPicker でユーザーが選んだファイルのみを扱います
 - WebView は同梱コンテンツのみを読み込み、外部リンクは OS のブラウザへ渡します
-- Ollama 連携、Quarto CLI レンダリング、Web クリップは対象外です
+- Ollama 連携、Quarto CLI レンダリングは対象外です。Web クリップは初期スコープ外です
 - アプリを削除すると SQLite のデータも失われます。重要な文書は書き出しからバックアップしてください
 
 ## インストールとビルド
@@ -114,7 +114,7 @@ npm install
 npm run build:editor
 ```
 
-`packages/editor-web` が単一HTMLへビルドされ、`apps/mobile/src/generated/editorHtml.ts` に埋め込まれます。
+`packages/editor-web` が単一HTMLへビルドされ、`apps/mobile/src/generated/editorHtml.ts` に埋め込まれます。同じHTMLが LP のライブデモ用に `docs/demo/editor.html` へ出力されます。
 
 4. アプリを起動
 
@@ -152,13 +152,13 @@ npx eas build --platform ios
 npx eas build --platform android
 ```
 
-ストア申請用の署名、スクリーンショット、プライバシーポリシーは Phase 4 で整備します。
+ストア申請用の署名、スクリーンショット、プライバシーポリシーはリリース準備で整備します。
 
 ### LP の公開
 
 `docs/` に GitHub Pages 用の LP を配置しています。`main` ブランチへの push で `.github/workflows/pages.yml` が実行され、自動的にデプロイされます。
 
-初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を「GitHub Actions」に設定してください。
+ワークフローは `configure-pages` の `enablement: true` で Pages を自動的に有効化するため、通常は初回設定は不要です。組織のポリシーなどで自動有効化できない場合のみ、**Settings → Pages → Build and deployment → Source** を「GitHub Actions」に設定してください。
 
 ### CI
 
@@ -167,7 +167,7 @@ npx eas build --platform android
 - 依存関係のインストール（`npm ci`）
 - 全ワークスペースの型検査（`npm run typecheck`）
 - エディタバンドルのビルド（`npm run build:editor`）
-- 生成された `editorHtml.ts` に未コミットの差分がないこと
+- 生成された `apps/mobile/src/generated/editorHtml.ts` と `docs/demo/editor.html` に未コミットの差分がないこと
 
 ## ディレクトリ構成
 
@@ -206,11 +206,12 @@ packages/editor-web/                # WebView 内エディタ
 │   │   ├── AbcSheet.tsx            # abcjs 描画・再生
 │   │   └── LinkEditorModal.tsx     # リンク入力
 │   ├── lib/
-│   │   ├── markdown.ts             # Lexical トランスフォーマー
+│   │   ├── markdown.ts             # Lexical トランスフォーマー（music-abc 対応）
 │   │   └── table.ts                # GFM テーブル変換
+│   ├── main.tsx                    # エディタのエントリポイント
 │   ├── theme.css                   # Tailwind テーマ
 │   └── editor.css                  # Lexical / WebView シェル
-└── scripts/emit-html.mjs           # 単一HTMLをアプリへ埋め込み
+└── scripts/emit-html.mjs           # 単一HTMLをアプリと LP デモへ出力
 packages/shared/                    # Web / RN 共通ロジック
 └── src/
     ├── bridge.ts                   # メッセージ型・パーサー
@@ -219,6 +220,10 @@ packages/shared/                    # Web / RN 共通ロジック
     ├── title.ts                    # タイトル抽出・文字数
     └── types.ts                    # DocumentRecord など
 docs/                               # GitHub Pages 用 LP
+├── index.html                      # ランディングページ
+├── demo/editor.html                # ライブデモ用エディタ（自動生成）
+├── demo/architecture.html          # Archify によるアーキテクチャ図
+└── assets/                         # アイコン・静的ポスター
 .github/workflows/pages.yml         # LP のデプロイ
 .github/workflows/ci.yml            # 型検査・エディタビルド検証
 DEV-MEMO.md                         # 実装メモ・調査記録
@@ -236,7 +241,7 @@ DEV-MEMO.md                         # 実装メモ・調査記録
 
 ## 既知の制約とロードマップ
 
-### v0.1.0（Phase 0）
+### v0.1.0
 
 - [x] Expo SDK 58 + Expo Router のモノレポ構成
 - [x] Web版からの Lexical エディタ抽出と単一HTMLビルド
@@ -259,9 +264,8 @@ DEV-MEMO.md                         # 実装メモ・調査記録
 - [ ] 全文書の一括バックアップ（ZIP / JSON）
 - [ ] iPad の横向きレイアウトと外付けキーボード対応
 - [ ] HTML 書き出しの改善（表・リスト・コードフェンス対応）
-- [ ] Web クリップ（Readability + Turndown）
+- [ ] Web クリップ（Readability + Turndown）— 初期スコープ外。需要があれば検討
 - [ ] UI テーマ追加（brutalist / cupertino）
-- [ ] Quarto CLI 連携はモバイルでは対象外（`.qmd` 書き出しのみ）
 
 ### 制約
 

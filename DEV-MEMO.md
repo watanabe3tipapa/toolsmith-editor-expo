@@ -1,7 +1,7 @@
 # DEV-MEMO — TOOLSMITH EDITOR Expo版
 
 - 作成日: 2026-11-01
-- 状態: Phase 0 実装済み / 実機検証待ち
+- 状態: Phase 0〜1 相当 実装済み / 実機検証待ち
 - 対象: iOS / Android（Expo + React Native）
 - **Ollama連携は対象外**（ユーザー判断）
 - 参照元:
@@ -219,7 +219,7 @@ toolsmith-editor-expo/
 │     ├─ src/export.ts
 │     ├─ src/title.ts
 │     └─ src/constants.ts
-├─ docs/                      # GitHub Pages 用 LP
+├─ docs/                      # GitHub Pages 用 LP（demo/editor.html は自動生成）
 ├─ .github/workflows/pages.yml
 ├─ LICENSE
 ├─ DEV-MEMO.md
@@ -235,7 +235,7 @@ toolsmith-editor-expo/
 - 残すもの: Lexical、Toolbar、MarkdownPreview、AbcSheet、テーマCSS、表変換
 - 保存・書き出し・文書切替はブリッジ経由でRNへ委譲
 - Vite + `vite-plugin-singlefile` で **単一HTML** に出力（JS/CSSインライン）
-- 出力先: `apps/mobile/src/generated/editorHtml.ts`（HTML文字列をTypeScript定数として生成）
+- 出力先: `apps/mobile/src/generated/editorHtml.ts`（HTML文字列をTypeScript定数として生成）と `docs/demo/editor.html`（LP のライブデモ用。同じ単一HTMLをそのまま配置）
 - フォントはOrbitron/Robotoを参照し、未インストール時はシステムフォントへフォールバック
 - abcjsは動的importをやめ、バンドルに含める（オフライン保証）。初期表示を軽くしたい場合は`React.lazy`ではなく、ABCブロックがある時だけ`import()`する手もあるが、ローカルバンドル内ならコード分割の意味は小さい
 
@@ -368,6 +368,7 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 
 - 描画・再生とも **WebView内のabcjs** で完結させる（既存実装をそのまま利用）
 - `MarkdownPreview` のABCフェンス抽出（`MarkdownPreview.tsx:8-17`）を維持
+- Lexical 標準のCODEトランスフォーマーは言語名を `\w+` でしか受け付けず、`music-abc` が `music` + 本文 `-abc` に分解される。`packages/editor-web/src/lib/markdown.ts` で `/^[ \t]*```([\w-]+)?/` を許可するカスタムトランスフォーマーに置き換え、インポート/エクスポートを往復させる
 - iOSのWeb Audioはユーザー操作起点なら再生可能。`mediaPlaybackRequiresUserAction={false}` と `allowsInlineMediaPlayback` を設定
 - マナーモード時の挙動、バックグラウンド移行時の停止は実機で確認
 - 失敗時のフォールバック: `abcjs.synth.renderAbcToAudioBuffer` でAudioBufferを作り、WAVへエンコードして `expo-audio` で再生（実装コスト高。Phase 2の保険）
@@ -568,7 +569,8 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 ### R7. フォント・CSSのオフライン化
 
 - Google Fonts外部読み込みはオフラインで失敗
-- 対策: woff2を同梱。Tailwind v4のCSSをビルド時にインライン化
+- 現状: エディタHTMLは外部フォントを読み込まず、Orbitron / Roboto が無い端末ではシステムフォントへフォールバックする（LPのみGoogle Fontsを参照）
+- 対策: デザインを厳密に再現する場合はwoff2を同梱。Tailwind v4のCSSはビルド時にインライン化済み
 
 ### R8. バージョンドリフト
 
@@ -591,12 +593,12 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 ## 6. 未確認事項（Phase 0で潰す）
 
 1. 同梱HTML文字列を `react-native-webview` がiOS/Android実機で読めるか（Expo Go / Development Build双方）
-2. 単一HTMLのサイズ（Lexical + abcjs + CSS + フォント）と初回ロード時間
+2. 単一HTMLのサイズ（Lexical + abcjs + CSS）と初回ロード時間
 3. abcjsの音声がiOS実機のマナーモード・Bluetooth・バックグラウンドでどう振る舞うか
 4. 10万字文書での入力遅延・メモリ・保存時間
 5. `color-mix(in oklab)` とTailwind v4出力がAndroidの最低サポートWebViewで動くか
 6. キーボード表示時のWebViewリサイズ（iOS/Android）と、ツールバーの追従
-7. Google Fontsを同梱した場合のアプリサイズ増加
+7. フォントを同梱する場合のアプリサイズ増加
 8. Expo SDK 58 / RN 0.88 と `react-native-webview` 14.0.1 の組み合わせの安定性
 9. EAS Buildでの `editorHtml.ts` のバンドル方法
 10. App Store審査でWebView利用が問題にならないか（4.2）
@@ -664,3 +666,6 @@ CREATE TABLE IF NOT EXISTS auto_save_log (
 | 日付 | 内容 |
 |---|---|
 | 2026-11-01 | 初版。Web版v0.6.2 / Desktop版v0.1.1を調査。Ollama除外を前提に実装可能性を判定し、WebViewハイブリッド構成・SQLite設計・Phase 0ゲートを記録 |
+| 2026-11-01 | Phase 0〜1 相当を実装。単一HTMLを `editorHtml.ts` と `docs/demo/editor.html` の両方へ出力するよう変更 |
+| 2026-11-01 | `music-abc` フェンスが `music` + `-abc` に分解される問題を、ハイフン許容のカスタムCODEトランスフォーマーで修正 |
+| 2026-11-01 | コードブロックの折り返し表示を修正。GitHub Pages LP・CI・Archify アーキテクチャ図を追加 |

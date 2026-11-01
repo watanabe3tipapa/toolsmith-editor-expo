@@ -55,7 +55,7 @@ function AbcSheet({ abc }: AbcSheetProps) {
         setError('');
       } catch (err) {
         console.error('ABC notation failed to render:', err);
-        setError('ABC記法を楽譜に変換できませんでした。');
+        setError('ABC記譜を楽譜に変換できませんでした。');
         return;
       }
 
@@ -105,11 +105,11 @@ function AbcSheet({ abc }: AbcSheetProps) {
   };
 
   return (
-    <div className="mt-3 rounded-lg border border-primary/40 bg-black/40 p-3" role="region" aria-label="ABC記法の楽譜プレビュー">
+    <div className="mt-3 rounded-lg border border-primary/40 bg-black/40 p-3" role="region" aria-label="ABC記譜の楽譜プレビュー">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <p className="inline-flex items-center gap-1.5 font-orbitron text-[10px] uppercase tracking-[0.18em] text-primary">
           <Music2 size={13} />
-          ABC記法
+          ABC記譜
         </p>
       </div>
 

@@ -116,6 +116,9 @@
 }
 
 .editor-code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-x: auto;
   background-color: rgba(20, 160, 230, 0.06);
   border: 1px solid color-mix(in oklab, var(--color-primary) 25%, transparent);
   padding: 12px;

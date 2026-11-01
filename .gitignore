@@ -10,3 +10,6 @@ ios/
 android/
 apps/mobile/.expo/
 packages/editor-web/dist/
+
+# Archify intermediate artifacts (delivered diagram lives in docs/demo)
+.archify/

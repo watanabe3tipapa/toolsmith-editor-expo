@@ -22,12 +22,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+  <script>document.documentElement.classList.add('has-js');</script>
   <style>
     :root {
       --bg: #050d16;
       --panel: #081522;
       --panel-2: #0b1e30;
       --line: rgba(43, 199, 255, 0.2);
+      --line-soft: rgba(43, 199, 255, 0.12);
       --line-strong: rgba(43, 199, 255, 0.48);
       --primary: #2bc7ff;
       --primary-deep: #14a0e6;
@@ -41,6 +43,7 @@
       --max: 1140px;
       --font: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
       --display: 'Orbitron', var(--font);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -81,18 +84,30 @@
     }
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
-    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3, h4, p { margin-top: 0; }
     code {
       padding: 0.08em 0.36em;
       border: 1px solid var(--line);
       border-radius: 4px;
       background: rgba(43, 199, 255, 0.08);
       color: var(--primary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-family: var(--mono);
       font-size: 0.88em;
     }
     .wrap { width: min(100% - 2.5rem, var(--max)); margin-inline: auto; }
     .display { font-family: var(--display); letter-spacing: 0.14em; }
+    .skip-link {
+      position: absolute;
+      top: -3rem;
+      left: 1rem;
+      z-index: 50;
+      padding: 0.6rem 1rem;
+      background: var(--primary);
+      color: #031019;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+    .skip-link:focus { top: 0.8rem; }
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -142,6 +157,8 @@
     }
     .btn-ghost:hover { background: rgba(43, 199, 255, 0.1); }
     .btn svg { flex: none; }
+    .btn-sm { padding: 0.55rem 0.9rem; font-size: 0.82rem; }
+
     .site-header {
       position: sticky;
       top: 0;
@@ -184,10 +201,11 @@
       letter-spacing: 0.2em;
       margin-top: 0.15rem;
     }
-    .nav-links { display: flex; align-items: center; gap: 1.5rem; font-size: 0.86rem; color: var(--muted); }
-    .nav-links a:hover { color: var(--primary); }
+    .nav-links { display: flex; align-items: center; gap: 1.35rem; font-size: 0.84rem; color: var(--muted); }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--primary); }
     .nav .btn { padding: 0.6rem 1rem; font-size: 0.84rem; }
-    .hero { padding: 5.2rem 0 5.4rem; }
+
+    .hero { padding: 5.2rem 0 5rem; }
     .hero-grid {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -333,7 +351,7 @@
       border-radius: 7px;
       background: rgba(2, 8, 14, 0.72);
       color: #8fb7d4;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--mono);
       font-size: 0.47rem;
       line-height: 1.75;
       white-space: pre;
@@ -367,7 +385,46 @@
     .float-chip.two { right: 0.2rem; top: 12rem; color: var(--green); border-color: rgba(103, 232, 165, 0.4); }
     .float-chip.three { bottom: 4.4rem; left: 1.4rem; color: var(--amber); border-color: rgba(252, 211, 77, 0.36); }
 
-    section { position: relative; }
+    .stack-strip { border-block: 1px solid var(--line-soft); background: rgba(3, 9, 16, 0.42); }
+    .stack {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      padding: 1rem 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .stack::-webkit-scrollbar { display: none; }
+    .stack-label {
+      flex: none;
+      color: var(--faint);
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+    }
+    .stack ul {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .stack li {
+      flex: none;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      padding: 0.34rem 0.65rem;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      color: var(--text);
+      font-size: 0.74rem;
+      white-space: nowrap;
+    }
+    .stack li small { color: var(--faint); font-size: 0.62rem; }
+
+    section { position: relative; scroll-margin-top: 4.8rem; }
     .section-pad { padding: 5rem 0; }
     .band { border-block: 1px solid rgba(43, 199, 255, 0.14); background: rgba(3, 9, 16, 0.45); }
     .section-head { max-width: 46rem; margin-bottom: 2.4rem; }
@@ -386,6 +443,353 @@
       letter-spacing: -0.035em;
     }
     .section-head p { margin-bottom: 0; color: var(--muted); font-size: 0.95rem; }
+    .section-head.center { margin-inline: auto; text-align: center; }
+
+    .demo-section { padding-top: 4.2rem; }
+    .demo-shell {
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: #071320;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 60px rgba(43, 199, 255, 0.08);
+    }
+    .demo-chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 2.9rem;
+      padding: 0.45rem 0.75rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(3, 10, 18, 0.9);
+    }
+    .chrome-left { display: flex; align-items: center; gap: 0.8rem; min-width: 0; }
+    .chrome-dots { display: flex; gap: 0.34rem; }
+    .chrome-dots span { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #1d3244; }
+    .chrome-dots span:first-child { background: #2d4a60; }
+    .chrome-url {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow: hidden;
+      color: var(--faint);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .chrome-url .live {
+      flex: none;
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+    .chrome-actions { display: flex; align-items: center; gap: 0.4rem; }
+    .chrome-btn {
+      padding: 0.3rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: rgba(43, 199, 255, 0.06);
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.68rem;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+    }
+    .chrome-btn:hover { border-color: var(--line-strong); color: var(--primary); background: rgba(43, 199, 255, 0.12); }
+    .chrome-btn[aria-pressed="true"] { border-color: var(--line-strong); color: var(--primary); }
+    .demo-stage { position: relative; background: #071526; }
+    .demo-stage iframe {
+      display: block;
+      width: 100%;
+      height: 820px;
+      border: 0;
+      background: #071526;
+    }
+    .demo-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      background: #071526;
+      color: var(--faint);
+      font-size: 0.8rem;
+      transition: opacity 0.35s ease;
+    }
+    .demo-loading.is-hidden { opacity: 0; pointer-events: none; }
+    .demo-loading .loader {
+      width: 1.6rem;
+      height: 1.6rem;
+      margin: 0 auto 0.8rem;
+      border: 2px solid rgba(43, 199, 255, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .demo-caption {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.7rem 1.2rem;
+      margin-top: 0.9rem;
+      color: var(--faint);
+      font-size: 0.76rem;
+    }
+    .demo-hints { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+    .demo-hints li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.24rem 0.55rem;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+    .demo-hints li span { color: var(--primary); font-family: var(--display); font-size: 0.58rem; letter-spacing: 0.08em; }
+
+    .tour-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      max-width: 44rem;
+      margin-bottom: 2rem;
+      padding: 0.35rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(4, 12, 20, 0.6);
+    }
+    .tour-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 0.8rem;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.84rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .tour-tab b {
+      color: var(--faint);
+      font-family: var(--display);
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+    }
+    .tour-tab:hover { color: var(--text); background: rgba(43, 199, 255, 0.05); }
+    .tour-tab[aria-selected="true"] {
+      border-color: var(--line-strong);
+      background: rgba(43, 199, 255, 0.11);
+      color: var(--primary);
+    }
+    .tour-tab[aria-selected="true"] b { color: var(--primary); }
+    .tour-panel { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.2rem; align-items: center; }
+    .tour-panel[hidden] { display: none; }
+    .tour-visual { display: grid; place-items: center; min-height: 31rem; }
+    .mini-phone {
+      width: 16.4rem;
+      padding: 0.48rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 2.1rem;
+      background: linear-gradient(160deg, #102638, #050c15 62%);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
+    }
+    .mini-screen {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 30rem;
+      overflow: hidden;
+      border-radius: 1.72rem;
+      background: #071526;
+    }
+    .mini-status {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.42rem 0.9rem 0.1rem;
+      color: var(--faint);
+      font-size: 0.46rem;
+      letter-spacing: 0.08em;
+    }
+    .mini-foot {
+      margin-top: auto;
+      padding: 0.45rem 0.8rem 0.55rem;
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 0.42rem;
+      line-height: 1.6;
+    }
+    .lib-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.8rem 0.7rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .lib-eyebrow { display: block; margin-bottom: 0.3rem; color: var(--primary); font-family: var(--display); font-size: 0.4rem; letter-spacing: 0.18em; }
+    .lib-head b { display: block; color: var(--primary); font-family: var(--display); font-size: 0.82rem; line-height: 1.3; letter-spacing: 0.12em; }
+    .lib-gear {
+      display: grid;
+      flex: none;
+      place-items: center;
+      width: 1.4rem;
+      height: 1.4rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      background: rgba(43, 199, 255, 0.1);
+      color: var(--primary);
+      font-size: 0.66rem;
+    }
+    .lib-actions { display: flex; gap: 0.3rem; padding: 0.55rem 0.8rem 0.45rem; }
+    .lib-primary {
+      flex: 1;
+      padding: 0.34rem 0.3rem;
+      border-radius: 5px;
+      background: var(--primary);
+      color: #031019;
+      font-size: 0.48rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .lib-secondary {
+      flex: none;
+      padding: 0.34rem 0.5rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      color: var(--primary);
+      font-size: 0.48rem;
+      text-align: center;
+    }
+    .lib-list { display: grid; gap: 0.34rem; padding: 0.2rem 0.8rem; }
+    .lib-card {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.42rem 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: linear-gradient(160deg, rgba(12, 30, 47, 0.8), rgba(5, 12, 20, 0.8));
+    }
+    .lib-card div { min-width: 0; flex: 1; }
+    .lib-card b { display: block; overflow: hidden; color: var(--text); font-size: 0.5rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .lib-card small { display: block; margin-top: 0.1rem; color: var(--faint); font-size: 0.38rem; }
+    .lib-card i { color: var(--faint); font-size: 0.6rem; font-style: normal; }
+    .lib-card:first-child { border-color: var(--line-strong); }
+    .lib-card:first-child b { color: var(--primary); }
+
+    .ed-head {
+      display: grid;
+      grid-template-columns: 1.2rem 1fr 1.2rem;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.5rem 0.6rem 0.45rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .ed-head .back { color: var(--primary); font-size: 1rem; line-height: 1; }
+    .ed-head .menu { color: var(--primary); font-size: 0.72rem; text-align: right; }
+    .ed-head b { display: block; overflow: hidden; font-size: 0.48rem; font-weight: 600; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+    .ed-head small { display: block; color: var(--green); font-size: 0.36rem; text-align: center; }
+    .ed-toolbar {
+      display: flex;
+      gap: 0.12rem;
+      padding: 0.34rem 0.42rem;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--muted);
+      font-size: 0.42rem;
+    }
+    .ed-toolbar span {
+      display: grid;
+      flex: none;
+      place-items: center;
+      width: 1.02rem;
+      height: 1.02rem;
+      border-radius: 3px;
+    }
+    .ed-toolbar span.on { background: rgba(43, 199, 255, 0.14); color: var(--primary); }
+    .ed-body { flex: 1; min-height: 0; padding: 0.7rem 0.75rem 0.3rem; overflow: hidden; }
+    .ed-body .ed-kicker { color: var(--primary); font-family: var(--display); font-size: 0.36rem; letter-spacing: 0.16em; }
+    .ed-body h4 { margin: 0.35rem 0 0.35rem; font-size: 0.92rem; line-height: 1.3; letter-spacing: -0.02em; }
+    .ed-body p { margin-bottom: 0.4rem; color: var(--muted); font-size: 0.46rem; line-height: 1.7; }
+    .ed-body .ed-rule { width: 2rem; height: 1px; margin: 0.45rem 0; background: var(--line-strong); }
+    .ed-body .ed-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; color: var(--faint); font-size: 0.38rem; }
+    .ed-body .ed-meta .ok { color: var(--green); }
+    .ed-preview {
+      margin: 0.3rem 0.75rem 0;
+      padding: 0.4rem 0.45rem;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: rgba(2, 8, 14, 0.72);
+      color: #8fb7d4;
+      font-family: var(--mono);
+      font-size: 0.36rem;
+      line-height: 1.65;
+      white-space: pre;
+      overflow: hidden;
+    }
+    .ed-preview .tag { color: var(--primary); }
+    .ed-preview .abc { color: var(--amber); }
+
+    .set-head { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); text-align: center; font-size: 0.5rem; font-weight: 600; }
+    .set-body { display: grid; gap: 0.45rem; padding: 0.6rem 0.75rem; }
+    .set-section { padding: 0.48rem 0.55rem; border: 1px solid var(--line); border-radius: 6px; background: rgba(6, 16, 27, 0.7); }
+    .set-section > b { display: block; margin-bottom: 0.35rem; color: var(--primary); font-size: 0.4rem; letter-spacing: 0.12em; }
+    .set-row { display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.18rem 0; }
+    .set-row span { color: var(--text); font-size: 0.44rem; }
+    .set-row small { display: block; color: var(--faint); font-size: 0.34rem; }
+    .set-row em { color: var(--faint); font-size: 0.38rem; font-style: normal; }
+    .set-switch {
+      position: relative;
+      flex: none;
+      width: 1.25rem;
+      height: 0.66rem;
+      border-radius: 999px;
+      background: rgba(43, 199, 255, 0.34);
+    }
+    .set-switch::after {
+      content: "";
+      position: absolute;
+      top: 0.11rem;
+      right: 0.11rem;
+      width: 0.44rem;
+      height: 0.44rem;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .set-chips { display: flex; gap: 0.18rem; margin-top: 0.25rem; }
+    .set-chips span { padding: 0.14rem 0.26rem; border: 1px solid var(--line); border-radius: 3px; color: var(--faint); font-size: 0.34rem; }
+    .set-chips span.on { border-color: var(--line-strong); background: rgba(43, 199, 255, 0.14); color: var(--primary); }
+    .set-note { margin: 0.1rem 0 0; color: var(--faint); font-size: 0.34rem; line-height: 1.6; }
+    .tour-copy h3 { margin-bottom: 0.7rem; font-size: clamp(1.35rem, 2.4vw, 1.85rem); letter-spacing: -0.03em; }
+    .tour-copy > p { color: var(--muted); font-size: 0.92rem; }
+    .tour-list { display: grid; gap: 0.9rem; margin: 1.4rem 0 0; padding: 0; list-style: none; }
+    .tour-list li { display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.7rem; align-items: start; }
+    .tour-list .no {
+      display: grid;
+      place-items: center;
+      width: 1.4rem;
+      height: 1.4rem;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 0.52rem;
+    }
+    .tour-list b { display: block; margin-bottom: 0.1rem; font-size: 0.88rem; }
+    .tour-list span { color: var(--muted); font-size: 0.8rem; line-height: 1.7; }
+
     .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     .card {
       padding: 1.5rem;
@@ -408,7 +812,48 @@
     }
     .card h3 { margin-bottom: 0.5rem; font-size: 1.02rem; }
     .card p { margin-bottom: 0; color: var(--muted); font-size: 0.83rem; line-height: 1.8; }
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; counter-reset: step; }
+
+    .arch-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 2.6rem; align-items: start; margin-bottom: 1.8rem; }
+    .arch-copy p { color: var(--muted); font-size: 0.9rem; }
+    .arch-points { display: grid; gap: 0.65rem; margin: 0; padding: 0; list-style: none; }
+    .arch-points li { display: grid; grid-template-columns: 0.5rem 1fr; gap: 0.65rem; align-items: start; color: var(--muted); font-size: 0.82rem; line-height: 1.7; }
+    .arch-points li::before { content: ""; width: 0.4rem; height: 0.4rem; margin-top: 0.55rem; border-radius: 50%; background: var(--primary); box-shadow: 0 0 8px rgba(43, 199, 255, 0.7); }
+    .arch-frame {
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: #050d16;
+    }
+    .arch-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.55rem 0.8rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(3, 10, 18, 0.9);
+      color: var(--faint);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+    .arch-bar a { color: var(--primary); }
+    .arch-bar a:hover { text-decoration: underline; }
+    .arch-frame iframe { display: block; width: 100%; height: 660px; border: 0; background: #050d16; }
+    .arch-poster { display: none; }
+    .arch-poster img { width: 100%; height: auto; border-radius: 10px; }
+    .arch-poster span { display: block; margin-top: 0.5rem; color: var(--faint); font-size: 0.72rem; }
+    .arch-note { margin: 0.8rem 0 0; color: var(--faint); font-size: 0.72rem; }
+    .arch-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-top: 1.6rem; }
+    .arch-card {
+      padding: 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(6, 15, 25, 0.6);
+    }
+    .arch-card h3 { margin-bottom: 0.4rem; color: var(--primary); font-family: var(--display); font-size: 0.66rem; letter-spacing: 0.1em; }
+    .arch-card p { margin-bottom: 0; color: var(--muted); font-size: 0.76rem; line-height: 1.7; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     .step {
       position: relative;
       padding: 1.5rem;
@@ -426,12 +871,14 @@
     }
     .step h3 { margin-bottom: 0.45rem; font-size: 1rem; }
     .step p { margin-bottom: 0; color: var(--muted); font-size: 0.83rem; line-height: 1.8; }
+
     .data-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items: start; }
     .data-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
     .data-list li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); font-size: 0.86rem; }
-    .data-list dt { color: var(--faint); }
-    .data-list dd { margin: 0; color: var(--text); }
-    .data-list dd.safe { color: var(--green); }
+    .data-list span:first-child { color: var(--faint); }
+    .data-list span:last-child { color: var(--text); }
+    .data-list .safe { color: var(--green); }
+
     .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .status-panel {
       padding: 1.6rem;
@@ -439,13 +886,7 @@
       border-radius: 12px;
       background: rgba(6, 15, 25, 0.6);
     }
-    .status-panel h3 {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 0.95rem;
-    }
+    .status-panel h3 { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.95rem; }
     .status-panel h3 .badge {
       padding: 0.12rem 0.45rem;
       border: 1px solid var(--line-strong);
@@ -469,6 +910,79 @@
     .check-list .done svg { color: var(--green); }
     .check-list .todo svg { color: var(--faint); }
     .check-list .todo { color: var(--faint); }
+
+    .roadmap { position: relative; display: grid; gap: 0; margin-top: 0.6rem; }
+    .roadmap::before {
+      content: "";
+      position: absolute;
+      top: 0.6rem;
+      bottom: 0.6rem;
+      left: 0.44rem;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--line-strong), var(--line), transparent);
+    }
+    .road-item { position: relative; display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 1.4rem; padding: 0.85rem 0 0.85rem 1.7rem; }
+    .road-item::before {
+      content: "";
+      position: absolute;
+      top: 1.45rem;
+      left: 0.12rem;
+      width: 0.64rem;
+      height: 0.64rem;
+      border: 2px solid var(--bg);
+      border-radius: 50%;
+      background: var(--faint);
+      box-shadow: 0 0 0 1px var(--line-strong);
+    }
+    .road-item.done::before { background: var(--green); }
+    .road-item.active::before { background: var(--primary); box-shadow: 0 0 12px var(--primary); }
+    .road-item .phase { color: var(--faint); font-family: var(--display); font-size: 0.6rem; letter-spacing: 0.1em; }
+    .road-item h3 { margin-bottom: 0.2rem; font-size: 0.98rem; }
+    .road-item p { margin-bottom: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.7; }
+    .road-item .state {
+      align-self: start;
+      margin-top: 0.2rem;
+      padding: 0.12rem 0.45rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--faint);
+      font-size: 0.62rem;
+      white-space: nowrap;
+    }
+    .road-item.done .state { border-color: rgba(103, 232, 165, 0.4); color: var(--green); }
+    .road-item.active .state { border-color: var(--line-strong); color: var(--primary); }
+
+    .faq { display: grid; gap: 0.55rem; max-width: 56rem; }
+    .faq details {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(6, 15, 25, 0.6);
+      transition: border-color 0.15s ease;
+    }
+    .faq details[open] { border-color: var(--line-strong); }
+    .faq summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.15rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "+";
+      flex: none;
+      color: var(--primary);
+      font-family: var(--display);
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .faq details[open] summary::after { content: "−"; }
+    .faq details p { margin: 0; padding: 0 1.15rem 1.1rem; color: var(--muted); font-size: 0.84rem; line-height: 1.85; }
+
     .cta {
       padding: 3.2rem 2rem;
       border: 1px solid var(--line-strong);
@@ -493,7 +1007,7 @@
       font-size: 0.76rem;
     }
     .site-footer {
-      margin-top: 4rem;
+      margin-top: 0;
       padding: 1.8rem 0 2.5rem;
       border-top: 1px solid rgba(43, 199, 255, 0.14);
       color: var(--faint);
@@ -503,6 +1017,10 @@
     .footer-links { display: flex; flex-wrap: wrap; gap: 1.3rem; }
     .footer-links a:hover { color: var(--primary); }
     :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 3px; }
+
+    .has-js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .has-js .reveal.is-visible { opacity: 1; transform: none; }
+
     @media (max-width: 960px) {
       .hero-grid { grid-template-columns: 1fr; gap: 2.6rem; }
       .hero { padding: 3.8rem 0 4.2rem; }
@@ -513,6 +1031,14 @@
       .cards { grid-template-columns: repeat(2, 1fr); }
       .data-grid { grid-template-columns: 1fr; gap: 2rem; }
       .nav-links { display: none; }
+      .demo-stage iframe { height: 700px; }
+      .tour-panel { grid-template-columns: 1fr; gap: 2rem; }
+      .tour-visual { min-height: auto; }
+      .tour-copy { order: -1; }
+      .arch-intro { grid-template-columns: 1fr; gap: 1.2rem; }
+      .arch-cards { grid-template-columns: repeat(2, 1fr); }
+      .arch-frame { display: none; }
+      .arch-poster { display: block; }
     }
     @media (max-width: 640px) {
       .wrap { width: min(100% - 1.8rem, var(--max)); }
@@ -527,14 +1053,32 @@
       .data-list li { grid-template-columns: 6.3rem 1fr; }
       .cta { padding: 2.4rem 1.2rem; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
+      .demo-section { padding-top: 3rem; }
+      .demo-chrome { flex-wrap: wrap; }
+      .chrome-url { display: none; }
+      .chrome-actions { width: 100%; justify-content: flex-end; }
+      .demo-stage iframe { height: 560px; }
+      .tour-tabs { grid-template-columns: 1fr; }
+      .tour-tab { justify-content: flex-start; }
+      .mini-phone { width: 15.4rem; }
+      .mini-screen { height: 28.5rem; }
+      .arch-cards { grid-template-columns: 1fr; }
+      .arch-frame iframe { height: 560px; }
+      .road-item { grid-template-columns: 3.4rem 1fr; gap: 0.8rem; }
+      .road-item .state { grid-column: 2; justify-self: start; margin-top: -0.3rem; }
+      .stack { padding: 0.8rem 0; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      *, *::before, *::after { transition: none !important; }
+      *, *::before, *::after { transition: none !important; animation-duration: 0.01ms !important; }
+      .has-js .reveal { opacity: 1; transform: none; }
+      .demo-loading .loader { animation: none; }
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="./" aria-label="TOOLSMITH EDITOR EXPO ホーム">
@@ -542,11 +1086,13 @@
         <span class="brand-name">TOOLSMITH<small>EDITOR EXPO</small></span>
       </a>
       <nav class="nav-links" aria-label="メインナビゲーション">
+        <a href="#demo">デモ</a>
+        <a href="#tour">ツアー</a>
         <a href="#features">特徴</a>
-        <a href="#workflow">使い方</a>
-        <a href="#data">データ</a>
+        <a href="#architecture">仕組み</a>
+        <a href="#roadmap">ロードマップ</a>
         <a href="#status">実装状況</a>
-        <a href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="#faq">FAQ</a>
       </nav>
       <a class="btn btn-primary" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">
         ソースコード
@@ -555,22 +1101,26 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Local-first mobile markdown</p>
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Expo / local-first markdown</p>
           <h1>書く場所を、<br /><span>ポケットに。</span></h1>
           <p class="hero-copy">
-            TOOLSMITH EDITOR EXPO は、Web版の編集体験を iOS / Android へ運ぶローカルファーストの Markdown ワークスペースです。
-            リッチテキストで書き、Markdown で持ち出し、原稿は端末内へ自動保存します。
+            TOOLSMITH EDITOR の編集体験を、iOS / Android へ。
+            リッチテキストで書き、Markdown で持ち出し、原稿は端末内の SQLite に自動保存します。
+            このページでは、実エディタをそのまま操作できます。
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">
+            <a class="btn btn-primary" href="#demo">
+              ライブデモを試す
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">
               GitHub でソースを見る
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
             </a>
-            <a class="btn btn-ghost" href="#features">特徴を見る</a>
           </div>
           <ul class="hero-checks">
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>アカウント不要</li>
@@ -579,7 +1129,7 @@
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>MIT License</li>
           </ul>
           <p class="hero-note">
-            Phase 0 実装済み。<a href="#status">iOS / Android 実機での検証を進行中</a>です。ストア配信は未定。
+            Phase 0〜1 相当の土台は実装済み。<a href="#status">iOS / Android 実機での検証を進行中</a>です。ストア配信は未定。
           </p>
         </div>
 
@@ -611,7 +1161,7 @@
               <pre class="app-preview" aria-hidden="true"><span class="tag">#</span> 思考を、すぐ形にする。
 
 リッチテキストで書き、Markdownで持ち出す。
-<span class="abc">```music-abc</span>
+<span class="abc">```abc</span>
 X:1
 T:Focus
 K:C
@@ -619,7 +1169,7 @@ C D E G | A G E D | C4
 <span class="abc">```</span></pre>
               <div class="app-footer">
                 <span>SQLite · 自動保存</span>
-                <b>プレビュー OFF</b>
+                <b>プレビュー ON</b>
               </div>
             </div>
           </div>
@@ -627,43 +1177,327 @@ C D E G | A G E D | C4
       </div>
     </section>
 
-    <section id="features" class="section-pad band">
+    <div class="stack-strip" aria-label="技術スタック">
+      <div class="wrap stack">
+        <span class="stack-label">BUILT WITH</span>
+        <ul>
+          <li>Expo <small>SDK 58</small></li>
+          <li>React Native <small>0.88</small></li>
+          <li>React <small>19.3（native）</small></li>
+          <li>React <small>18.3（editor-web）</small></li>
+          <li>Expo Router <small>58</small></li>
+          <li>Lexical <small>0.32</small></li>
+          <li>abcjs <small>6.7</small></li>
+          <li>expo-sqlite <small>58</small></li>
+          <li>TypeScript <small>5.9</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <section id="demo" class="section-pad demo-section">
       <div class="wrap">
         <div class="section-head">
-          <p class="kicker">必要な道具を、ポケットに</p>
+          <p class="kicker">Live demo</p>
+          <h2>このページで、実エディタをそのまま。</h2>
+          <p>
+            アプリに同梱しているエディタ HTML を iframe で読み込んでいます。
+            テキストの編集、ツールバーによる書式変更、ABC 楽譜の描画と再生を試せます。
+          </p>
+        </div>
+
+        <div class="demo-shell reveal">
+          <div class="demo-chrome">
+            <div class="chrome-left">
+              <span class="chrome-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="chrome-url"><span class="live" aria-hidden="true"></span>toolsmith-editor://demo</span>
+            </div>
+            <div class="chrome-actions">
+              <button type="button" class="chrome-btn" id="demo-preview" aria-pressed="true">プレビュー ON</button>
+              <button type="button" class="chrome-btn" id="demo-reset">サンプルに戻す</button>
+              <a class="chrome-btn" href="./demo/editor.html" target="_blank" rel="noopener noreferrer">別タブで開く ↗</a>
+            </div>
+          </div>
+          <div class="demo-stage">
+            <div class="demo-loading" id="demo-loading">
+              <div>
+                <div class="loader" aria-hidden="true"></div>
+                エディタを読み込んでいます…
+              </div>
+            </div>
+            <iframe
+              id="demo-frame"
+              title="TOOLSMITH EDITOR ライブデモ"
+              data-src="./demo/editor.html"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+        <div class="demo-caption">
+          <ul class="demo-hints">
+            <li><span>01</span>テキストを編集</li>
+            <li><span>02</span>ツールバーで書式変更</li>
+            <li><span>03</span>ABC 楽譜を再生</li>
+          </ul>
+          <span>ソースプレビューはスクロールして確認できます。編集内容はこのページ内だけに留まります。</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tour" class="section-pad band">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Product tour</p>
+          <h2>3つの画面で、書くことに集中する。</h2>
+          <p>文書を選び、書き、保存の振る舞いを決める。モバイルで完結するための最小構成です。</p>
+        </div>
+
+        <div class="tour-tabs" role="tablist" aria-label="画面ツアー">
+          <button class="tour-tab" id="tab-library" type="button" role="tab" aria-selected="true" aria-controls="panel-library" tabindex="0">
+            <b>01</b>ライブラリ
+          </button>
+          <button class="tour-tab" id="tab-editor" type="button" role="tab" aria-selected="false" aria-controls="panel-editor" tabindex="-1">
+            <b>02</b>エディタ
+          </button>
+          <button class="tour-tab" id="tab-settings" type="button" role="tab" aria-selected="false" aria-controls="panel-settings" tabindex="-1">
+            <b>03</b>設定
+          </button>
+        </div>
+
+        <div class="tour-panel" id="panel-library" role="tabpanel" aria-labelledby="tab-library" tabindex="0">
+          <div class="tour-visual">
+            <div class="mini-phone" role="img" aria-label="文書ライブラリ画面のイメージ">
+              <div class="mini-screen">
+                <div class="mini-status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="lib-head">
+                  <div>
+                    <span class="lib-eyebrow">LOCAL-FIRST WORKSPACE</span>
+                    <b>TOOLSMITH<br />EDITOR</b>
+                  </div>
+                  <span class="lib-gear" aria-hidden="true">⚙</span>
+                </div>
+                <div class="lib-actions">
+                  <span class="lib-primary">＋ 新しい文書</span>
+                  <span class="lib-secondary">インポート</span>
+                </div>
+                <div class="lib-list">
+                  <div class="lib-card"><div><b>思考を、すぐ形にする。</b><small>今日 09:41 · 132語</small></div><i>›</i></div>
+                  <div class="lib-card"><div><b>Pocket Sketch</b><small>昨日 21:08 · 48語</small></div><i>›</i></div>
+                  <div class="lib-card"><div><b>ABC 記譜のメモ</b><small>10月29日 · 216語</small></div><i>›</i></div>
+                </div>
+                <div class="mini-foot">文書はこの端末内の SQLite に保存されます。長押しで削除できます。</div>
+              </div>
+            </div>
+          </div>
+          <div class="tour-copy">
+            <p class="kicker">Library</p>
+            <h3>文書を、一覧で。</h3>
+            <p>起動して最初に開くのは、文書のライブラリ。書くための入口を1画面にまとめました。</p>
+            <ul class="tour-list">
+              <li><span class="no">01</span><div><b>新しい文書を作る</b><span>「＋ 新しい文書」からすぐに書き始められます。初回は案内文つきの文書が用意されます。</span></div></li>
+              <li><span class="no">02</span><div><b>Markdown を取り込む</b><span>DocumentPicker から <code>.md</code> / <code>.markdown</code> / <code>.txt</code> を選び、新しい文書として保存します。</span></div></li>
+              <li><span class="no">03</span><div><b>長押しで整理する</b><span>文書カードを長押しすると削除。タイトルは本文の見出しから自動で抽出されます。</span></div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tour-panel" id="panel-editor" role="tabpanel" aria-labelledby="tab-editor" tabindex="0" hidden>
+          <div class="tour-visual">
+            <div class="mini-phone" role="img" aria-label="エディタ画面のイメージ">
+              <div class="mini-screen">
+                <div class="mini-status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="ed-head">
+                  <span class="back" aria-hidden="true">‹</span>
+                  <div><b>思考を、すぐ形にする。</b><small>保存済み</small></div>
+                  <span class="menu" aria-hidden="true">⋯</span>
+                </div>
+                <div class="ed-toolbar" aria-hidden="true">
+                  <span class="on">H1</span><span>B</span><span>I</span><span>U</span><span>“</span><span>≡</span><span>☑</span><span>⌘</span><span>↗</span>
+                </div>
+                <div class="ed-body">
+                  <span class="ed-kicker">MARKDOWN WORKSPACE</span>
+                  <h4>思考を、すぐ<br />形にする。</h4>
+                  <p>余計な選択肢を減らし、文章とアイデアをつなげるための軽量な編集環境。</p>
+                  <div class="ed-rule"></div>
+                  <div class="ed-meta"><span>842文字</span><span>132語</span><span class="ok">保存済み · たった今</span></div>
+                </div>
+                <pre class="ed-preview" aria-hidden="true"><span class="tag">#</span> 思考を、すぐ形にする。
+
+リッチテキストで書き、Markdownで持ち出す。
+<span class="abc">```abc</span>
+X:1
+T:Focus
+K:C
+C D E G | A G E D | C4
+<span class="abc">```</span></pre>
+                <div class="mini-foot">SQLite · 自動保存 · プレビュー ON</div>
+              </div>
+            </div>
+          </div>
+          <div class="tour-copy">
+            <p class="kicker">Editor</p>
+            <h3>書いて、整えて、確かめる。</h3>
+            <p>太字や見出し、リスト、チェックリスト、引用、表、リンク、コードブロックをリッチテキストで編集できます。</p>
+            <ul class="tour-list">
+              <li><span class="no">01</span><div><b>横スクロールのツールバー</b><span>画面幅に収まらない書式ボタンは、ツールバーを横にスクロールして選べます。</span></div></li>
+              <li><span class="no">02</span><div><b>Markdown ソースプレビュー</b><span>編集中の内容を Markdown としてその場で確認。設定で表示 / 非表示を切り替えられます。</span></div></li>
+              <li><span class="no">03</span><div><b>ABC 記譜の再生</b><span><code>```abc</code> ブロックを abcjs で描画し、再生・一時停止・停止・テンポ調整まで行えます。</span></div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tour-panel" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" tabindex="0" hidden>
+          <div class="tour-visual">
+            <div class="mini-phone" role="img" aria-label="設定画面のイメージ">
+              <div class="mini-screen">
+                <div class="mini-status"><span>9:41</span><span>▮▮▮</span></div>
+                <div class="set-head">設定</div>
+                <div class="set-body">
+                  <div class="set-section">
+                    <b>エディタ</b>
+                    <div class="set-row">
+                      <div><span>ソースプレビュー</span><small>Markdown と ABC 楽譜を下部に表示</small></div>
+                      <span class="set-switch" aria-hidden="true"></span>
+                    </div>
+                    <div class="set-row"><span>自動保存の待ち時間</span></div>
+                    <div class="set-chips"><span>400ms</span><span class="on">800ms</span><span>1500ms</span><span>2500ms</span></div>
+                  </div>
+                  <div class="set-section">
+                    <b>表示</b>
+                    <div class="set-row"><span>テーマ</span><em>cosmic</em></div>
+                  </div>
+                  <div class="set-section">
+                    <b>ストレージ</b>
+                    <div class="set-row"><span>文書数</span><em>3</em></div>
+                    <div class="set-row"><span>データベースサイズ</span><em>12.4 KB</em></div>
+                  </div>
+                  <div class="set-section">
+                    <b>アプリ</b>
+                    <div class="set-row"><span>バージョン</span><em>0.1.0</em></div>
+                    <p class="set-note">文書はこの端末内の SQLite にのみ保存されます。必要な文書は書き出しからバックアップしてください。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tour-copy">
+            <p class="kicker">Settings</p>
+            <h3>保存の粒度を、自分で決める。</h3>
+            <p>書き味に影響する設定だけを、シンプルな項目でまとめています。</p>
+            <ul class="tour-list">
+              <li><span class="no">01</span><div><b>自動保存の待ち時間</b><span>編集が止まってから保存するまでの待ち時間を 400 / 800 / 1500 / 2500ms から選択。保存状態はヘッダーに表示されます。</span></div></li>
+              <li><span class="no">02</span><div><b>ソースプレビュー</b><span>Markdown と ABC 楽譜の表示をオン / オフ。集中したいときは非表示にできます。</span></div></li>
+              <li><span class="no">03</span><div><b>ストレージの可視化</b><span>文書数とデータベースサイズを確認。原稿が端末内に収まっていることを把握できます。</span></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section-pad">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Features</p>
           <h2>書く、整える、持ち出す。<br />その流れを、端末内で。</h2>
           <p>機能を増やすのではなく、書き始めてから書き出しまでの距離を短くしました。</p>
         </div>
         <div class="cards">
-          <article class="card">
+          <article class="card reveal">
             <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>
             <h3>端末内 SQLite へ自動保存</h3>
             <p>編集が止まると SQLite へ保存。待ち時間は 400 / 800 / 1500 / 2500ms から選べ、保存状態はヘッダーに表示されます。</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 6-6 6 6 6"/><path d="m16 6 6 6-6 6"/></svg></span>
             <h3>リッチテキストと Markdown を往復</h3>
             <p>見出し、リスト、チェックリスト、引用、表、リンク、コードブロックをリッチテキストで編集。Markdown ソースもその場で確認できます。</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-            <h3>ABC 記法の楽譜を再生</h3>
+            <h3>ABC 記譜の楽譜を再生</h3>
             <p><code>```abc</code> / <code>```music-abc</code> ブロックを abcjs で描画。再生、一時停止、停止、テンポ調整までアプリ内で完結します。</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></span>
             <h3>5形式の書き出し</h3>
             <p>Markdown / HTML / JSON / Quarto / Plain Text を OS の共有シートへ。AirDrop、メール、ファイルアプリから取り出せます。</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg></span>
             <h3>既存の Markdown を受け取る</h3>
             <p>DocumentPicker から <code>.md</code> / <code>.markdown</code> / <code>.txt</code> を読み込み、新しい文書として保存します。</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
             <h3>オフラインで完結</h3>
-            <p>エディタ、フォント、abcjs をアプリに同梱。原稿を外部サーバーへ送らず、ネットワークなしでも動作します。</p>
+            <p>エディタ本体と abcjs をアプリに同梱。原稿を外部サーバーへ送らず、ネットワークなしでも編集・保存・書き出しができます。表示フォントは端末のシステムフォントを使用します。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture" class="section-pad band">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Architecture</p>
+          <h2>ネイティブシェルと、<br />その中のエディタ。</h2>
+          <p>
+            アプリ全体を WebView で包むのではなく、画面遷移・保存・共有はネイティブ側が担当。
+            編集体験だけを WebView に閉じ込めています。
+          </p>
+        </div>
+
+        <div class="arch-intro">
+          <div class="arch-copy">
+            <p>
+              Expo Router のネイティブシェルが文書ライブラリ、エディタ画面、設定を持ち、
+              エディタは単一 HTML にビルドした Lexical アプリとして WebView 内で動作します。
+              画面遷移と保存はネイティブ、執筆と再生は WebView。責務を分けたまま、1つのアプリとして動きます。
+            </p>
+            <p class="arch-note">
+              図は Archify でコードベースの実装根拠をもとに生成しています。
+            </p>
+          </div>
+          <ul class="arch-points">
+            <li>文書の一覧・作成・削除・自動保存はネイティブ側の SQLite が担当</li>
+            <li>起動時は READY まで送信をキューに保持し、INIT で本文を渡す</li>
+            <li>編集内容は CONTENT_CHANGED として 300ms デバウンスで集約</li>
+            <li>保存は直列化し、保存中の変更を pendingSaveRef に退避</li>
+            <li>書き出しはエディタから EXPORT_REQUEST を送り、共有シートへ</li>
+          </ul>
+        </div>
+
+        <div class="arch-frame">
+          <div class="arch-bar">
+            <span>runtime · interactive diagram</span>
+            <a href="./demo/architecture.html?theme=dark" target="_blank" rel="noopener noreferrer">全画面で開く ↗</a>
+          </div>
+          <iframe
+            src="./demo/architecture.html?theme=dark&amp;embed=1"
+            title="TOOLSMITH EDITOR EXPO の実行構成図"
+            loading="lazy"
+          ></iframe>
+        </div>
+        <a class="arch-poster" href="./demo/architecture.html?theme=dark" target="_blank" rel="noopener noreferrer">
+          <img src="./assets/architecture-dark.webp" width="1600" height="858" alt="TOOLSMITH EDITOR EXPO の実行構成図。ネイティブシェル、WebView ホスト、Lexical エディタ、SQLite、書き出し、共有シートの関係を示す。" loading="lazy" />
+          <span>タップして拡大 · Archify で生成</span>
+        </a>
+
+        <div class="arch-cards">
+          <article class="arch-card">
+            <h3>NATIVE SHELL</h3>
+            <p>Expo Router が画面遷移、SQLite CRUD、自動保存、共有シート、DocumentPicker を担当します。</p>
+          </article>
+          <article class="arch-card">
+            <h3>WEBVIEW HOST</h3>
+            <p>単一 HTML のエディタを読み込み、INIT / READY / CONTENT_CHANGED をブリッジします。</p>
+          </article>
+          <article class="arch-card">
+            <h3>LEXICAL EDITOR</h3>
+            <p>リッチテキスト編集、Markdown 変換、abcjs による楽譜描画と Web Audio 再生を持ちます。</p>
+          </article>
+          <article class="arch-card">
+            <h3>SAVE &amp; EXPORT</h3>
+            <p>保存は直列化して取りこぼしを防ぎ、5形式を OS の共有シートへ渡します。</p>
           </article>
         </div>
       </div>
@@ -672,22 +1506,22 @@ C D E G | A G E D | C4
     <section id="workflow" class="section-pad">
       <div class="wrap">
         <div class="section-head">
-          <p class="kicker">はじめる</p>
+          <p class="kicker">Getting started</p>
           <h2>3ステップで、書き始められる。</h2>
           <p>セットアップはありません。起動したら、そのまま書けます。</p>
         </div>
         <div class="steps">
-          <article class="step">
+          <article class="step reveal">
             <span class="step-no">STEP 01</span>
             <h3>新しい文書をつくる</h3>
             <p>ライブラリから「＋ 新しい文書」を選ぶか、既存の Markdown を読み込みます。初回は案内文つきの文書が用意されます。</p>
           </article>
-          <article class="step">
+          <article class="step reveal">
             <span class="step-no">STEP 02</span>
             <h3>書いて、整える</h3>
             <p>横スクロールのツールバーで書式を変更。必要ならメニューからソースプレビューをオンにして、Markdown と ABC 楽譜を確認します。</p>
           </article>
-          <article class="step">
+          <article class="step reveal">
             <span class="step-no">STEP 03</span>
             <h3>保存して、持ち出す</h3>
             <p>編集内容は自動保存。共有シートから必要な形式を選び、AirDrop やファイルアプリへ書き出せます。</p>
@@ -699,7 +1533,7 @@ C D E G | A G E D | C4
     <section id="data" class="section-pad band">
       <div class="wrap data-grid">
         <div>
-          <p class="kicker">データの取り扱い</p>
+          <p class="kicker">Your data</p>
           <h2>原稿は、<br />この端末の中に。</h2>
           <p style="color: var(--muted); font-size: 0.95rem;">
             TOOLSMITH EDITOR EXPO は、クラウドサービスではありません。
@@ -721,29 +1555,30 @@ C D E G | A G E D | C4
     <section id="status" class="section-pad">
       <div class="wrap">
         <div class="section-head">
-          <p class="kicker">開発状況</p>
-          <h2>Phase 0 は実装済み。<br />いまは実機で確かめている段階。</h2>
-          <p>開発中のプロジェクトです。ストア配信、署名、EAS Build の設定はまだ整っていません。</p>
+          <p class="kicker">Status</p>
+          <h2>土台は実装済み。<br />いまは実機で確かめている段階。</h2>
+          <p>開発中のプロジェクトです。CI と LP は公開済み、ストア配信・署名・EAS Build はこれから整えます。</p>
         </div>
         <div class="status-grid">
-          <article class="status-panel">
-            <h3>実装済み <span class="badge">PHASE 0</span></h3>
+          <article class="status-panel reveal">
+            <h3>実装済み <span class="badge">NOW</span></h3>
             <ul class="check-list">
               <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>Expo SDK 58 + Expo Router のモノレポ構成</li>
-              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>Lexical エディタの抽出と単一HTMLビルド</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>Lexical エディタの抽出と単一 HTML ビルド</li>
               <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>WebView ブリッジと自動保存の直列化</li>
               <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>SQLite の文書 CRUD と設定保存</li>
               <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>ライブラリ / エディタ / 設定のネイティブ画面</li>
               <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>5形式の書き出しと DocumentPicker 取り込み</li>
+              <li class="done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>GitHub Actions CI（型チェック / エディタビルド / 差分チェック）</li>
             </ul>
           </article>
-          <article class="status-panel">
+          <article class="status-panel reveal">
             <h3>これから <span class="badge">NEXT</span></h3>
             <ul class="check-list">
               <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>iOS / Android 実機での WebView 読み込み検証</li>
               <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>abcjs の音声再生検証（マナーモード / Bluetooth）</li>
               <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>10万字文書の入力・保存ベンチマーク</li>
-              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>EAS Build / CI の整備</li>
+              <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>EAS Build / 署名の整備</li>
               <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>App Store / Google Play 向けスクリーンショット</li>
               <li class="todo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>文書検索・タグ・一括バックアップ</li>
             </ul>
@@ -752,9 +1587,93 @@ C D E G | A G E D | C4
       </div>
     </section>
 
+    <section id="roadmap" class="section-pad band">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Roadmap</p>
+          <h2>小さく動かして、<br />確かめながら進める。</h2>
+          <p>実装済みの範囲と、これから検証する範囲を分けて公開しています。</p>
+        </div>
+        <div class="roadmap">
+          <article class="road-item done">
+            <span class="phase">NOW</span>
+            <div>
+              <h3>モバイル版の土台</h3>
+              <p>モノレポ、Lexical エディタ、WebView ブリッジ、SQLite CRUD、5形式の書き出し、ネイティブ3画面。</p>
+            </div>
+            <span class="state">完了</span>
+          </article>
+          <article class="road-item active">
+            <span class="phase">NEXT</span>
+            <div>
+              <h3>実機での検証と安定化</h3>
+              <p>iOS / Android の WebView 読み込み、ABC 音声再生、キーボード表示、大規模文書の保存性能を確認します。</p>
+            </div>
+            <span class="state">進行中</span>
+          </article>
+          <article class="road-item">
+            <span class="phase">SOON</span>
+            <div>
+              <h3>配布準備</h3>
+              <p>EAS Build、署名、アプリアイコン / スプラッシュ、ストア向けスクリーンショットとプライバシー表記。</p>
+            </div>
+            <span class="state">予定</span>
+          </article>
+          <article class="road-item">
+            <span class="phase">LATER</span>
+            <div>
+              <h3>ワークスペースの拡張</h3>
+              <p>文書検索、タグ、一括バックアップ、書き出しテンプレートなど、文書が増えたときの導線を検討します。</p>
+            </div>
+            <span class="state">検討</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section-pad">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">FAQ</p>
+          <h2>よくある質問</h2>
+          <p>実装状況とスコープについて、現時点の回答をまとめました。</p>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>ストアで配信されていますか？</summary>
+            <p>まだ配信していません。モバイル版の土台は実装済みで、現在は iOS / Android 実機での検証を進めています。ソースコードと開発メモは GitHub で公開しています。</p>
+          </details>
+          <details>
+            <summary>データはどこに保存されますか？</summary>
+            <p>文書は端末内の SQLite（アプリ専用領域）に保存されます。アカウントやクラウド同期はありません。アプリを削除するとデータも失われるため、必要な文書は共有シートから書き出してバックアップしてください。</p>
+          </details>
+          <details>
+            <summary>Web版との違いは何ですか？</summary>
+            <p>Web版の Lexical エディタを単一 HTML として同梱し、Expo のネイティブシェルから WebView で読み込んでいます。保存先はブラウザのストレージではなく SQLite、書き出しは OS の共有シート、取り込みは DocumentPicker です。外部フォルダを直接編集する機能はモバイル版では再現していません。</p>
+          </details>
+          <details>
+            <summary>Quarto はどこまで対応していますか？</summary>
+            <p>YAML ヘッダー付きの <code>.qmd</code> 書き出しに対応しています。Quarto CLI によるレンダリングはスコープ外です。</p>
+          </details>
+          <details>
+            <summary>オフラインで使えますか？</summary>
+            <p>はい。エディタ本体と abcjs をアプリに同梱しているため、ネットワークがなくても編集・保存・書き出しができます。表示フォントは端末のシステムフォントを使用します。</p>
+          </details>
+          <details>
+            <summary>テーマは変更できますか？</summary>
+            <p>現在は cosmic（Sci-Fi）テーマ固定です。設定画面からソースプレビューの表示と自動保存の待ち時間を変更できます。テーマの追加は今後の検討項目です。</p>
+          </details>
+          <details>
+            <summary>対応 OS を教えてください。</summary>
+            <p>Expo SDK 58 / React Native 0.88 を前提に、iOS と Android を対象としています。実機検証が完了するまでは、動作保証や配信時期を確定していません。</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <section class="section-pad band">
       <div class="wrap">
-        <div class="cta">
+        <div class="cta reveal">
           <p class="kicker">TOOLSMITH EDITOR EXPO</p>
           <h2>次の一文を、ポケットから。</h2>
           <p>ソースコードと開発メモを GitHub で公開しています。実装の詳細や検証項目は DEV-MEMO.md を参照してください。</p>
@@ -781,11 +1700,195 @@ C D E G | A G E D | C4
     <div class="wrap footer-inner">
       <span>TOOLSMITH EDITOR EXPO · v0.1.0</span>
       <div class="footer-links">
+        <a href="#demo">ライブデモ</a>
         <a href="#data">データの取り扱い</a>
+        <a href="#faq">FAQ</a>
         <a href="https://github.com/watanabe3tipapa/toolsmith-editor-expo/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">License</a>
         <a href="https://github.com/watanabe3tipapa/toolsmith-editor-expo" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      // Product tour tabs
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      var panels = tabs.map(function (tab) { return document.getElementById(tab.getAttribute('aria-controls')); });
+
+      function selectTab(index, focus) {
+        tabs.forEach(function (tab, i) {
+          var selected = i === index;
+          tab.setAttribute('aria-selected', String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          panels[i].hidden = !selected;
+        });
+        if (focus) tabs[index].focus();
+      }
+
+      tabs.forEach(function (tab, index) {
+        tab.addEventListener('click', function () { selectTab(index, false); });
+        tab.addEventListener('keydown', function (event) {
+          var next = index;
+          if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          selectTab(next, true);
+        });
+      });
+
+      // Reveal on scroll
+      var revealItems = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+      if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '0px 0px -40px 0px', threshold: 0.08 });
+        revealItems.forEach(function (item) { revealObserver.observe(item); });
+      } else {
+        revealItems.forEach(function (item) { item.classList.add('is-visible'); });
+      }
+
+      // Live demo
+      var SAMPLE = [
+        '# 書く場所を、ポケットに。',
+        '',
+        'リッチテキストで書き、Markdown で持ち出す。',
+        '',
+        '```abc',
+        'X:1',
+        'T:Pocket Sketch',
+        'M:4/4',
+        'L:1/4',
+        'K:C',
+        'C D E G | A G E D | C4 z4 |',
+        '```',
+      ].join('\n');
+
+      var frame = document.getElementById('demo-frame');
+      var loading = document.getElementById('demo-loading');
+      var previewButton = document.getElementById('demo-preview');
+      var resetButton = document.getElementById('demo-reset');
+      var shell = frame ? frame.closest('.demo-shell') : null;
+      var src = frame ? frame.getAttribute('data-src') : '';
+      var initTimer = null;
+      var outboxTimer = null;
+      var loaded = false;
+      var previewVisible = true;
+
+      function post(message) {
+        if (!frame || !frame.contentWindow) return false;
+        try {
+          var receive = frame.contentWindow.__toolsmithReceive;
+          if (typeof receive !== 'function') return false;
+          receive(JSON.stringify(message));
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function sendInit() {
+        return post({
+          type: 'INIT',
+          documentId: 'lp-demo',
+          markdown: SAMPLE,
+          theme: 'cosmic',
+          previewVisible: previewVisible,
+        });
+      }
+
+      function drainOutbox() {
+        if (!frame || !frame.contentWindow) return;
+        try {
+          var outbox = frame.contentWindow.__toolsmithOutbox;
+          if (Array.isArray(outbox) && outbox.length > 0) {
+            outbox.length = 0;
+          }
+        } catch (error) {
+          // The iframe may be navigating; ignore.
+        }
+      }
+
+      function waitForEditor() {
+        if (!frame) return;
+        var attempts = 0;
+        if (initTimer) window.clearInterval(initTimer);
+        initTimer = window.setInterval(function () {
+          attempts += 1;
+          if (sendInit()) {
+            window.clearInterval(initTimer);
+            initTimer = null;
+            if (loading) loading.classList.add('is-hidden');
+            if (resetButton) resetButton.disabled = false;
+            if (previewButton) {
+              previewButton.disabled = false;
+              previewButton.setAttribute('aria-pressed', String(previewVisible));
+              previewButton.textContent = previewVisible ? 'プレビュー ON' : 'プレビュー OFF';
+            }
+          } else if (attempts > 160) {
+            window.clearInterval(initTimer);
+            initTimer = null;
+            if (loading) {
+              loading.innerHTML = '<div>エディタを読み込めませんでした。<br /><a href="./demo/editor.html" style="color:#2bc7ff">別タブで開く ↗</a></div>';
+            }
+          }
+        }, 100);
+      }
+
+      function loadDemo() {
+        if (!frame || loaded) return;
+        loaded = true;
+        frame.src = src;
+        frame.addEventListener('load', function () {
+          if (!outboxTimer) outboxTimer = window.setInterval(drainOutbox, 500);
+          waitForEditor();
+        });
+      }
+
+      if (frame) {
+        if (previewButton) {
+          previewButton.disabled = true;
+          previewButton.addEventListener('click', function () {
+            previewVisible = !previewVisible;
+            previewButton.setAttribute('aria-pressed', String(previewVisible));
+            previewButton.textContent = previewVisible ? 'プレビュー ON' : 'プレビュー OFF';
+            post({ type: 'SET_PREVIEW_VISIBLE', visible: previewVisible });
+          });
+        }
+        if (resetButton) {
+          resetButton.disabled = true;
+          resetButton.addEventListener('click', function () {
+            if (sendInit() && previewButton) {
+              previewButton.setAttribute('aria-pressed', 'true');
+              previewButton.textContent = 'プレビュー ON';
+              previewVisible = true;
+            }
+          });
+        }
+
+        if ('IntersectionObserver' in window) {
+          var demoObserver = new IntersectionObserver(function (entries) {
+            if (entries.some(function (entry) { return entry.isIntersecting; })) {
+              demoObserver.disconnect();
+              loadDemo();
+            }
+          }, { rootMargin: '900px 0px' });
+          demoObserver.observe(frame);
+        } else {
+          loadDemo();
+        }
+      }
+
+      // Footer year-free notice: keep static content.
+      if (shell) shell.classList.add('is-ready');
+    })();
+  </script>
 </body>
 </html>
