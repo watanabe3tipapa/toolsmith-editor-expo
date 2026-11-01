@@ -266,15 +266,6 @@ DEV-MEMO.md                         # 実装メモ・調査記録
 2. [公開サイト](https://watanabe3tipapa.github.io/toolsmith-editor-expo/) — 機能紹介と実装状況の LP
 3. [Web版](https://github.com/watanabe3tipapa/toolsmith-editor) / [Desktop版](https://github.com/watanabe3tipapa/toolsmith-editor-desktop) — 移植元
 
-## コントリビューション
-
-コントリビューションは歓迎します。大きな変更を行う前に [Issue](https://github.com/watanabe3tipapa/toolsmith-editor-expo/issues) を立てて相談してください。一般的な手順:
-
-1. リポジトリをフォーク
-2. 機能ブランチを作成 (`git checkout -b feature/your-feature`)
-3. 変更をコミット (`git commit -m 'Add your feature'`)
-4. ブランチをプッシュし、Pull Request を作成
-
 ## 連絡先
 
 - GitHub: https://github.com/watanabe3tipapa/toolsmith-editor-expo
