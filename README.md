@@ -141,6 +141,8 @@ npx expo run:android
 | `npm run ios` | iOS シミュレータ / Expo Go で起動 |
 | `npm run android` | Android エミュレータ / Expo Go で起動 |
 | `npm run typecheck` | 全ワークスペースの TypeScript 型検査 |
+| `npm run lint` | ESLint（expo 設定）による静的解析 |
+| `npm test` | 共有ロジックのユニットテスト（Vitest） |
 | `npx expo run:ios` | iOS の Development Build を作成・起動 |
 | `npx expo run:android` | Android の Development Build を作成・起動 |
 
@@ -167,6 +169,8 @@ npx eas build --platform android
 
 - 依存関係のインストール（`npm ci`）
 - 全ワークスペースの型検査（`npm run typecheck`）
+- 静的解析（`npm run lint`）
+- 共有ロジックのユニットテスト（`npm test`）
 - エディタバンドルのビルド（`npm run build:editor`）
 - 生成された `apps/mobile/src/generated/editorHtml.ts` と `docs/demo/editor.html` に未コミットの差分がないこと
 
@@ -215,6 +219,7 @@ packages/editor-web/                # WebView 内エディタ
 └── scripts/emit-html.mjs           # 単一HTMLをアプリと LP デモへ出力
 packages/shared/                    # Web / RN 共通ロジック
 └── src/
+    ├── __tests__/                  # Vitest によるユニットテスト
     ├── bridge.ts                   # メッセージ型・パーサー
     ├── constants.ts                # 既定文書
     ├── export.ts                   # 5形式の変換
@@ -256,7 +261,7 @@ DEV-MEMO.md                         # 実装メモ・調査記録
 - [ ] abcjs の音声再生検証（マナーモード・Bluetooth）
 - [ ] 10万字文書の入力・保存ベンチマーク
 - [ ] App Store / Google Play 向けアイコン・スクリーンショット
-- [x] CI（型検査・エディタビルド検証）
+- [x] CI（型検査・lint・テスト・エディタビルド検証）
 - [ ] EAS Build の整備
 
 ### 次の候補

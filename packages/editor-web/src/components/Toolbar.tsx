@@ -72,7 +72,7 @@ type ToolbarProps = {
   onSaveRequest: () => void;
 };
 
-const EXPORT_MENU: Array<{ format: ExportFormat; label: string }> = [
+const EXPORT_MENU: { format: ExportFormat; label: string }[] = [
   { format: 'md', label: 'Markdown (.md)' },
   { format: 'html', label: 'HTML (.html)' },
   { format: 'json', label: 'JSON (.json)' },
@@ -287,11 +287,12 @@ function Toolbar({ editor, onExport, onSaveRequest }: ToolbarProps) {
           </div>
         )}
       </div>
-      <LinkEditorModal
-        open={linkModalOpen}
-        onClose={() => setLinkModalOpen(false)}
-        onSubmit={submitLink}
-      />
+      {linkModalOpen && (
+        <LinkEditorModal
+          onClose={() => setLinkModalOpen(false)}
+          onSubmit={submitLink}
+        />
+      )}
     </div>
   );
 }

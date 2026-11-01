@@ -1,5 +1,5 @@
 import type { MultilineElementTransformer } from '@lexical/markdown';
-import type { ElementNode, LexicalNode } from 'lexical';
+import type { LexicalNode } from 'lexical';
 import { $createTextNode } from 'lexical';
 import {
   $createTableNodeWithDimensions,

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link2, X } from 'lucide-react';
 
 type LinkEditorModalProps = {
-  open: boolean;
   onClose: () => void;
   onSubmit: (url: string) => void;
 };
@@ -15,21 +14,17 @@ function normalizeUrl(input: string): string | null {
   return `https://${trimmed}`;
 }
 
-function LinkEditorModal({ open, onClose, onSubmit }: LinkEditorModalProps) {
+function LinkEditorModal({ onClose, onSubmit }: LinkEditorModalProps) {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (open) {
-      setValue('');
-      setError('');
-      window.setTimeout(() => inputRef.current?.focus(), 0);
-    }
-  }, [open]);
+    const timer = window.setTimeout(() => inputRef.current?.focus(), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
-    if (!open) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -38,9 +33,7 @@ function LinkEditorModal({ open, onClose, onSubmit }: LinkEditorModalProps) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, onClose]);
-
-  if (!open) return null;
+  }, [onClose]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();

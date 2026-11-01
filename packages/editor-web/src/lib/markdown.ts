@@ -36,10 +36,10 @@ const CODE_WITH_HYPHEN: Transformer = {
   regExpStart: CODE_START_REGEX,
   replace: (
     rootNode: ElementNode,
-    children: Array<LexicalNode> | null,
-    startMatch: Array<string>,
-    endMatch: Array<string> | null,
-    linesInBetween: Array<string> | null,
+    children: LexicalNode[] | null,
+    startMatch: string[],
+    endMatch: string[] | null,
+    linesInBetween: string[] | null,
     isImport: boolean,
   ) => {
     if (!children && linesInBetween) {
@@ -93,7 +93,7 @@ const CODE_WITH_HYPHEN: Transformer = {
   type: 'multiline-element',
 };
 
-export const TRANSFORMERS_WITH_TABLE: Array<Transformer> = [
+export const TRANSFORMERS_WITH_TABLE: Transformer[] = [
   ...TRANSFORMERS.filter((transformer) => transformer !== CODE),
   CODE_WITH_HYPHEN,
   TABLE,

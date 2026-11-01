@@ -29,7 +29,7 @@ import { useSettingsStore } from '../../src/stores/useSettingsStore';
 import { colors } from '../../src/theme/tokens';
 import { statusLabel } from '../../src/utils/format';
 
-const EXPORT_FORMATS: Array<{ format: ExportFormat; label: string }> = [
+const EXPORT_FORMATS: { format: ExportFormat; label: string }[] = [
   { format: 'md', label: 'Markdown' },
   { format: 'html', label: 'HTML' },
   { format: 'json', label: 'JSON' },
@@ -47,7 +47,6 @@ export default function EditorScreen() {
   const [status, setStatus] = useState<SaveStatus>('saved');
   const [loading, setLoading] = useState(true);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [previewVisible, setPreviewVisible] = useState(false);
 
   const settings = useSettingsStore((state) => state.settings);
   const patchSettings = useSettingsStore((state) => state.patch);
@@ -66,10 +65,6 @@ export default function EditorScreen() {
     statusRef.current = next;
     setStatus(next);
   }, []);
-
-  useEffect(() => {
-    setPreviewVisible(settings.previewVisible);
-  }, [settings.previewVisible]);
 
   useEffect(() => {
     let cancelled = false;
@@ -238,7 +233,6 @@ export default function EditorScreen() {
   }, []);
 
   const togglePreview = async (value: boolean) => {
-    setPreviewVisible(value);
     await patchSettings({ previewVisible: value });
   };
 
@@ -280,7 +274,7 @@ export default function EditorScreen() {
         <WebEditor
           documentId={document.id}
           markdown={markdown}
-          previewVisible={previewVisible}
+          previewVisible={settings.previewVisible}
           theme={settings.theme}
           onMessage={handleEditorMessage}
         />
@@ -319,10 +313,10 @@ export default function EditorScreen() {
                 <Text style={styles.toggleHint}>MarkdownとABC楽譜を表示します</Text>
               </View>
               <Switch
-                value={previewVisible}
+                value={settings.previewVisible}
                 onValueChange={(value) => void togglePreview(value)}
                 trackColor={{ false: colors.surfaceElevated, true: colors.primaryBorder }}
-                thumbColor={previewVisible ? colors.primary : colors.textFaint}
+                thumbColor={settings.previewVisible ? colors.primary : colors.textFaint}
               />
             </View>
 

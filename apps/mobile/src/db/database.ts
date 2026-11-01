@@ -25,7 +25,7 @@ async function migrate(database: SQLite.SQLiteDatabase): Promise<void> {
   const versionRow = await database.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   const currentVersion = versionRow?.user_version ?? 0;
 
-  if (currentVersion < 1) {
+  if (currentVersion < SCHEMA_VERSION) {
     await database.execAsync(`
       PRAGMA journal_mode = WAL;
       PRAGMA foreign_keys = ON;
@@ -57,7 +57,7 @@ async function migrate(database: SQLite.SQLiteDatabase): Promise<void> {
         FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
       );
 
-      PRAGMA user_version = 1;
+      PRAGMA user_version = ${SCHEMA_VERSION};
     `);
   }
 }
