@@ -9,6 +9,7 @@ toolsmith-editor-expo は、Web版 TOOLSMITH EDITOR の編集体験を Expo（Re
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-v0.1.0-blue.svg)](https://github.com/watanabe3tipapa/toolsmith-editor-expo/releases)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-blue.svg)](https://watanabe3tipapa.github.io/toolsmith-editor-expo/)
+[![CI](https://github.com/watanabe3tipapa/toolsmith-editor-expo/actions/workflows/ci.yml/badge.svg)](https://github.com/watanabe3tipapa/toolsmith-editor-expo/actions/workflows/ci.yml)
 [![Expo SDK](https://img.shields.io/badge/Expo%20SDK-58-000020?logo=expo)](https://expo.dev/)
 [![React Native](https://img.shields.io/badge/React%20Native-0.88-61DAFB?logo=react)](https://reactnative.dev/)
 [![Lexical](https://img.shields.io/badge/Lexical-0.32-1877F2)](https://lexical.dev/)
@@ -159,6 +160,15 @@ npx eas build --platform android
 
 初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を「GitHub Actions」に設定してください。
 
+### CI
+
+`main` への push と Pull Request で GitHub Actions の CI が実行されます。
+
+- 依存関係のインストール（`npm ci`）
+- 全ワークスペースの型検査（`npm run typecheck`）
+- エディタバンドルのビルド（`npm run build:editor`）
+- 生成された `editorHtml.ts` に未コミットの差分がないこと
+
 ## ディレクトリ構成
 
 ```text
@@ -210,6 +220,7 @@ packages/shared/                    # Web / RN 共通ロジック
     └── types.ts                    # DocumentRecord など
 docs/                               # GitHub Pages 用 LP
 .github/workflows/pages.yml         # LP のデプロイ
+.github/workflows/ci.yml            # 型検査・エディタビルド検証
 DEV-MEMO.md                         # 実装メモ・調査記録
 ```
 
@@ -239,7 +250,8 @@ DEV-MEMO.md                         # 実装メモ・調査記録
 - [ ] abcjs の音声再生検証（マナーモード・Bluetooth）
 - [ ] 10万字文書の入力・保存ベンチマーク
 - [ ] App Store / Google Play 向けアイコン・スクリーンショット
-- [ ] EAS Build / CI の整備
+- [x] CI（型検査・エディタビルド検証）
+- [ ] EAS Build の整備
 
 ### 次の候補
 
